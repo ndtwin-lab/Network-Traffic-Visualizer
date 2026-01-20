@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="root" prefHeight="900.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12">
+    <!-- TopologyCanvas (center) -->
+    <center>
+        <StackPane fx:id="canvasPane" style="-fx-background-color: transparent; -fx-padding: 0;">
+            <Canvas fx:id="topologyCanvas" height="898.0" style="-fx-background-color: transparent;" width="1029.0" />
+        </StackPane>
+    </center>
+    <!-- InfoPanel (right) -->
+    <right>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <content>
+                <VBox fx:id="infoPanel" maxWidth="320.0" minWidth="180.0" prefWidth="250.0" style="-fx-background-color: #f9f9f9; -fx-border-color: #cccccc; -fx-border-width: 0 0 0 1;">
+                    <Label text="InfoPanel" />
+                </VBox>
+            </content>
+        </ScrollPane>
+    </right>
+   <top>
+        <VBox fx:id="sideBar" prefHeight="823.0" prefWidth="1244.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-width: 0 1 0 0;" BorderPane.alignment="CENTER">
+            <Label text="SideBar" />
+        </VBox>
+   </top>
+</BorderPane>

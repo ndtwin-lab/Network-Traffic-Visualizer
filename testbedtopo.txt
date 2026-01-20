@@ -1,0 +1,2976 @@
+{
+    "edges": [
+        {
+            "dst_dpid": 106225808403428,
+            "dst_interface": 21,
+            "dst_ip": [
+                201984522
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1124182208,
+                    "dst_port": 57201,
+                    "protocol_number": 6,
+                    "src_ip": 335653056,
+                    "src_port": 5204
+                },
+                {
+                    "dst_ip": 771860672,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 134326464,
+                    "src_port": 41123
+                },
+                {
+                    "dst_ip": 654420160,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 486648000,
+                    "src_port": 60181
+                },
+                {
+                    "dst_ip": 1963043008,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 151103680,
+                    "src_port": 55595
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 952714812,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 47285188,
+            "link_bandwidth_utilization_percent": 4.728518800000003,
+            "src_dpid": 106225808402492,
+            "src_interface": 21,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 106225803167444,
+            "dst_interface": 21,
+            "dst_ip": [
+                218761738
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808402492,
+            "src_interface": 22,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                16885952,
+                33663168,
+                50440384,
+                67217600
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808402492,
+            "src_interface": 1,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                83994816,
+                100772032,
+                117549248,
+                134326464
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 978946763,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 21053237,
+            "link_bandwidth_utilization_percent": 2.1053236999999947,
+            "src_dpid": 106225808402492,
+            "src_interface": 2,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                151103680,
+                167880896,
+                184658112,
+                201435328
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999897112,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 102888,
+            "link_bandwidth_utilization_percent": 0.010288800000002318,
+            "src_dpid": 106225808402492,
+            "src_interface": 3,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                218212544,
+                234989760,
+                251766976,
+                268544192
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999830,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 170,
+            "link_bandwidth_utilization_percent": 1.6999999996603066e-05,
+            "src_dpid": 106225808402492,
+            "src_interface": 4,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                285321408,
+                302098624,
+                318875840,
+                335653056
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984339872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15660128,
+            "link_bandwidth_utilization_percent": 1.566012800000005,
+            "src_dpid": 106225808402492,
+            "src_interface": 5,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                352430272,
+                369207488,
+                385984704,
+                402761920
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999830,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 170,
+            "link_bandwidth_utilization_percent": 1.6999999996603066e-05,
+            "src_dpid": 106225808402492,
+            "src_interface": 6,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                419539136,
+                436316352,
+                453093568,
+                469870784
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999830,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 170,
+            "link_bandwidth_utilization_percent": 1.6999999996603066e-05,
+            "src_dpid": 106225808402492,
+            "src_interface": 7,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                486648000,
+                503425216,
+                520202432,
+                536979648
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984238372,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15761628,
+            "link_bandwidth_utilization_percent": 1.5761628000000028,
+            "src_dpid": 106225808402492,
+            "src_interface": 8,
+            "src_ip": [
+                67766794
+            ]
+        },
+        {
+            "dst_dpid": 106225808403428,
+            "dst_interface": 22,
+            "dst_ip": [
+                201984522
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 486648000,
+                    "dst_port": 60181,
+                    "protocol_number": 6,
+                    "src_ip": 654420160,
+                    "src_port": 5204
+                },
+                {
+                    "dst_ip": 83994816,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1023518912,
+                    "src_port": 56217
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984049492,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15950508,
+            "link_bandwidth_utilization_percent": 1.5950507999999974,
+            "src_dpid": 106225808387660,
+            "src_interface": 21,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 106225803167444,
+            "dst_interface": 22,
+            "dst_ip": [
+                218761738
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808387660,
+            "src_interface": 22,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                553756864,
+                570534080,
+                587311296,
+                604088512
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 1,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                620865728,
+                637642944,
+                654420160,
+                671197376
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 2,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                687974592,
+                704751808,
+                721529024,
+                738306240
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 3,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                755083456,
+                771860672,
+                788637888,
+                805415104
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 4,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                822192320,
+                838969536,
+                855746752,
+                872523968
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 5,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                889301184,
+                906078400,
+                922855616,
+                939632832
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 6,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                956410048,
+                973187264,
+                989964480,
+                1006741696
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 7,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1023518912,
+                1040296128,
+                1057073344,
+                1073850560
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808387660,
+            "src_interface": 8,
+            "src_ip": [
+                50989578
+            ]
+        },
+        {
+            "dst_dpid": 106225808384924,
+            "dst_interface": 21,
+            "dst_ip": [
+                235538954
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 335653056,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1124182208,
+                    "src_port": 57201
+                },
+                {
+                    "dst_ip": 1694607552,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1543612608,
+                    "src_port": 37055
+                },
+                {
+                    "dst_ip": 2063706304,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1560389824,
+                    "src_port": 38569
+                },
+                {
+                    "dst_ip": 1728161984,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1577167040,
+                    "src_port": 36271
+                },
+                {
+                    "dst_ip": 520202432,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1359063232,
+                    "src_port": 52289
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 921382092,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 78617908,
+            "link_bandwidth_utilization_percent": 7.861790800000001,
+            "src_dpid": 106225808391692,
+            "src_interface": 21,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 106225808398208,
+            "dst_interface": 21,
+            "dst_ip": [
+                252316170
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808391692,
+            "src_interface": 22,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1090627776,
+                1107404992,
+                1124182208,
+                1140959424
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999897952,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 102048,
+            "link_bandwidth_utilization_percent": 0.010204800000002123,
+            "src_dpid": 106225808391692,
+            "src_interface": 1,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1157736640,
+                1174513856,
+                1191291072,
+                1208068288
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808391692,
+            "src_interface": 2,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1224845504,
+                1241622720,
+                1258399936,
+                1275177152
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 979026144,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 20973856,
+            "link_bandwidth_utilization_percent": 2.0973856000000013,
+            "src_dpid": 106225808391692,
+            "src_interface": 3,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1291954368,
+                1308731584,
+                1325508800,
+                1342286016
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808391692,
+            "src_interface": 4,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1359063232,
+                1375840448,
+                1392617664,
+                1409394880
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999897672,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 102328,
+            "link_bandwidth_utilization_percent": 0.010232799999998488,
+            "src_dpid": 106225808391692,
+            "src_interface": 5,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1426172096,
+                1442949312,
+                1459726528,
+                1476503744
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999744,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 256,
+            "link_bandwidth_utilization_percent": 2.559999999762752e-05,
+            "src_dpid": 106225808391692,
+            "src_interface": 6,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1493280960,
+                1510058176,
+                1526835392,
+                1543612608
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999854692,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 145308,
+            "link_bandwidth_utilization_percent": 0.014530800000001065,
+            "src_dpid": 106225808391692,
+            "src_interface": 7,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1560389824,
+                1577167040,
+                1593944256,
+                1610721472
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999738072,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 261928,
+            "link_bandwidth_utilization_percent": 0.026192800000002237,
+            "src_dpid": 106225808391692,
+            "src_interface": 8,
+            "src_ip": [
+                151652874
+            ]
+        },
+        {
+            "dst_dpid": 106225808384924,
+            "dst_interface": 22,
+            "dst_ip": [
+                235538954
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1577167040,
+                    "dst_port": 36271,
+                    "protocol_number": 6,
+                    "src_ip": 1728161984,
+                    "src_port": 5204
+                },
+                {
+                    "dst_ip": 1275177152,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1862379712,
+                    "src_port": 53887
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 978792712,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 21207288,
+            "link_bandwidth_utilization_percent": 2.1207288000000046,
+            "src_dpid": 106225808380928,
+            "src_interface": 21,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 106225808398208,
+            "dst_interface": 22,
+            "dst_ip": [
+                252316170
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808380928,
+            "src_interface": 22,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1627498688,
+                1644275904,
+                1661053120,
+                1677830336
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 1,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1694607552,
+                1711384768,
+                1728161984,
+                1744939200
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 2,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1761716416,
+                1778493632,
+                1795270848,
+                1812048064
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 3,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1828825280,
+                1845602496,
+                1862379712,
+                1879156928
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 4,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1895934144,
+                1912711360,
+                1929488576,
+                1946265792
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 5,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                1963043008,
+                1979820224,
+                1996597440,
+                2013374656
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 6,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                2030151872,
+                2046929088,
+                2063706304,
+                2080483520
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 7,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 0,
+            "dst_interface": 0,
+            "dst_ip": [
+                2097260736,
+                2114037952,
+                2130815168,
+                2147592384
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225808380928,
+            "src_interface": 8,
+            "src_ip": [
+                168430090
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 21,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 486648000,
+                    "dst_port": 60181,
+                    "protocol_number": 6,
+                    "src_ip": 654420160,
+                    "src_port": 5204
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 952714952,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 47285048,
+            "link_bandwidth_utilization_percent": 4.7285048,
+            "src_dpid": 106225808403428,
+            "src_interface": 21,
+            "src_ip": [
+                201984522
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 21,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 654420160,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 486648000,
+                    "src_port": 60181
+                },
+                {
+                    "dst_ip": 771860672,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 134326464,
+                    "src_port": 41123
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 968426612,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 31573388,
+            "link_bandwidth_utilization_percent": 3.157338799999998,
+            "src_dpid": 106225808403428,
+            "src_interface": 22,
+            "src_ip": [
+                201984522
+            ]
+        },
+        {
+            "dst_dpid": 106225808382584,
+            "dst_interface": 1,
+            "dst_ip": [
+                1678379530
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1963043008,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 151103680,
+                    "src_port": 55595
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984092540,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15907460,
+            "link_bandwidth_utilization_percent": 1.5907459999999984,
+            "src_dpid": 106225808403428,
+            "src_interface": 1,
+            "src_ip": [
+                201984522
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 22,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225803167444,
+            "src_interface": 21,
+            "src_ip": [
+                218761738
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 22,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225803167444,
+            "src_interface": 22,
+            "src_ip": [
+                218761738
+            ]
+        },
+        {
+            "dst_dpid": 106225808382584,
+            "dst_interface": 2,
+            "dst_ip": [
+                1678379530
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 106225803167444,
+            "src_interface": 1,
+            "src_ip": [
+                218761738
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 21,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1543612608,
+                    "dst_port": 37055,
+                    "protocol_number": 6,
+                    "src_ip": 1694607552,
+                    "src_port": 5204
+                },
+                {
+                    "dst_ip": 1275177152,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1862379712,
+                    "src_port": 53887
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 983678380,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 16321620,
+            "link_bandwidth_utilization_percent": 1.6321620000000037,
+            "src_dpid": 106225808384924,
+            "src_interface": 21,
+            "src_ip": [
+                235538954
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 21,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1728161984,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1577167040,
+                    "src_port": 36271
+                },
+                {
+                    "dst_ip": 1963043008,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 151103680,
+                    "src_port": 55595
+                },
+                {
+                    "dst_ip": 1694607552,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1543612608,
+                    "src_port": 37055
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 917786732,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 82213268,
+            "link_bandwidth_utilization_percent": 8.221326799999995,
+            "src_dpid": 106225808384924,
+            "src_interface": 22,
+            "src_ip": [
+                235538954
+            ]
+        },
+        {
+            "dst_dpid": 106225808382584,
+            "dst_interface": 3,
+            "dst_ip": [
+                1678379530
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 335653056,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1124182208,
+                    "src_port": 57201
+                },
+                {
+                    "dst_ip": 520202432,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1359063232,
+                    "src_port": 52289
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 969293260,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 30706740,
+            "link_bandwidth_utilization_percent": 3.0706739999999955,
+            "src_dpid": 106225808384924,
+            "src_interface": 1,
+            "src_ip": [
+                235538954
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 22,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808398208,
+            "src_interface": 21,
+            "src_ip": [
+                252316170
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 22,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808398208,
+            "src_interface": 22,
+            "src_ip": [
+                252316170
+            ]
+        },
+        {
+            "dst_dpid": 106225808382584,
+            "dst_interface": 4,
+            "dst_ip": [
+                1678379530
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808398208,
+            "src_interface": 1,
+            "src_ip": [
+                252316170
+            ]
+        },
+        {
+            "dst_dpid": 106225808403428,
+            "dst_interface": 1,
+            "dst_ip": [
+                201984522
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 520202432,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1359063232,
+                    "src_port": 52289
+                },
+                {
+                    "dst_ip": 335653056,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1124182208,
+                    "src_port": 57201
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 968482096,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 31517904,
+            "link_bandwidth_utilization_percent": 3.1517903999999985,
+            "src_dpid": 106225808382584,
+            "src_interface": 1,
+            "src_ip": [
+                1678379530
+            ]
+        },
+        {
+            "dst_dpid": 106225803167444,
+            "dst_interface": 1,
+            "dst_ip": [
+                218761738
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808382584,
+            "src_interface": 2,
+            "src_ip": [
+                1678379530
+            ]
+        },
+        {
+            "dst_dpid": 106225808384924,
+            "dst_interface": 1,
+            "dst_ip": [
+                235538954
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1124182208,
+                    "dst_port": 57201,
+                    "protocol_number": 6,
+                    "src_ip": 335653056,
+                    "src_port": 5204
+                },
+                {
+                    "dst_ip": 1963043008,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 151103680,
+                    "src_port": 55595
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984499292,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15500708,
+            "link_bandwidth_utilization_percent": 1.550070800000003,
+            "src_dpid": 106225808382584,
+            "src_interface": 3,
+            "src_ip": [
+                1678379530
+            ]
+        },
+        {
+            "dst_dpid": 106225808398208,
+            "dst_interface": 1,
+            "dst_ip": [
+                252316170
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999872,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 128,
+            "link_bandwidth_utilization_percent": 1.2800000004364875e-05,
+            "src_dpid": 106225808382584,
+            "src_interface": 4,
+            "src_ip": [
+                1678379530
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 1,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999488,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 512,
+            "link_bandwidth_utilization_percent": 5.119999999525504e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                16885952,
+                33663168,
+                50440384,
+                67217600
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 2,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 771860672,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 134326464,
+                    "src_port": 41123
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 978926011,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 21073989,
+            "link_bandwidth_utilization_percent": 2.1073989000000015,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                83994816,
+                100772032,
+                117549248,
+                134326464
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 3,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1963043008,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 151103680,
+                    "src_port": 55595
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984166688,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15833312,
+            "link_bandwidth_utilization_percent": 1.5833312000000044,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                151103680,
+                167880896,
+                184658112,
+                201435328
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 4,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999318,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 682,
+            "link_bandwidth_utilization_percent": 6.820000000296034e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                218212544,
+                234989760,
+                251766976,
+                268544192
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 5,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1124182208,
+                    "dst_port": 57201,
+                    "protocol_number": 6,
+                    "src_ip": 335653056,
+                    "src_port": 5204
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999897848,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 102152,
+            "link_bandwidth_utilization_percent": 0.01021519999999665,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                285321408,
+                302098624,
+                318875840,
+                335653056
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 6,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999318,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 682,
+            "link_bandwidth_utilization_percent": 6.820000000296034e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                352430272,
+                369207488,
+                385984704,
+                402761920
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 7,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999318,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 682,
+            "link_bandwidth_utilization_percent": 6.820000000296034e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                419539136,
+                436316352,
+                453093568,
+                469870784
+            ]
+        },
+        {
+            "dst_dpid": 106225808402492,
+            "dst_interface": 8,
+            "dst_ip": [
+                67766794
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1359063232,
+                    "dst_port": 52289,
+                    "protocol_number": 6,
+                    "src_ip": 520202432,
+                    "src_port": 5204
+                },
+                {
+                    "dst_ip": 654420160,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 486648000,
+                    "src_port": 60181
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984237568,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15762432,
+            "link_bandwidth_utilization_percent": 1.5762432000000048,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                486648000,
+                503425216,
+                520202432,
+                536979648
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 1,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                553756864,
+                570534080,
+                587311296,
+                604088512
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 2,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                620865728,
+                637642944,
+                654420160,
+                671197376
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 3,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                687974592,
+                704751808,
+                721529024,
+                738306240
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 4,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                755083456,
+                771860672,
+                788637888,
+                805415104
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 5,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                822192320,
+                838969536,
+                855746752,
+                872523968
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 6,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                889301184,
+                906078400,
+                922855616,
+                939632832
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 7,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                956410048,
+                973187264,
+                989964480,
+                1006741696
+            ]
+        },
+        {
+            "dst_dpid": 106225808387660,
+            "dst_interface": 8,
+            "dst_ip": [
+                50989578
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 83994816,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1023518912,
+                    "src_port": 56217
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1023518912,
+                1040296128,
+                1057073344,
+                1073850560
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 1,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 335653056,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1124182208,
+                    "src_port": 57201
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984302360,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15697640,
+            "link_bandwidth_utilization_percent": 1.5697639999999957,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1090627776,
+                1107404992,
+                1124182208,
+                1140959424
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 2,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999488,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 512,
+            "link_bandwidth_utilization_percent": 5.119999999525504e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1157736640,
+                1174513856,
+                1191291072,
+                1208068288
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 3,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1862379712,
+                    "dst_port": 53887,
+                    "protocol_number": 6,
+                    "src_ip": 1275177152,
+                    "src_port": 5204
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999863420,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 136580,
+            "link_bandwidth_utilization_percent": 0.013658000000005277,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1224845504,
+                1241622720,
+                1258399936,
+                1275177152
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 4,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999488,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 512,
+            "link_bandwidth_utilization_percent": 5.119999999525504e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1291954368,
+                1308731584,
+                1325508800,
+                1342286016
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 5,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 520202432,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1359063232,
+                    "src_port": 52289
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984296288,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15703712,
+            "link_bandwidth_utilization_percent": 1.570371199999998,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1359063232,
+                1375840448,
+                1392617664,
+                1409394880
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 6,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 999999360,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 640,
+            "link_bandwidth_utilization_percent": 6.399999999961992e-05,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1426172096,
+                1442949312,
+                1459726528,
+                1476503744
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 7,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1694607552,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1543612608,
+                    "src_port": 37055
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 984296288,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 15703712,
+            "link_bandwidth_utilization_percent": 1.570371199999998,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1493280960,
+                1510058176,
+                1526835392,
+                1543612608
+            ]
+        },
+        {
+            "dst_dpid": 106225808391692,
+            "dst_interface": 8,
+            "dst_ip": [
+                151652874
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1728161984,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1577167040,
+                    "src_port": 36271
+                },
+                {
+                    "dst_ip": 2063706304,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1560389824,
+                    "src_port": 38569
+                }
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "left_link_bandwidth_bps": 968593088,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 31406912,
+            "link_bandwidth_utilization_percent": 3.140691200000001,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1560389824,
+                1577167040,
+                1593944256,
+                1610721472
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 1,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1627498688,
+                1644275904,
+                1661053120,
+                1677830336
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 2,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1577167040,
+                    "dst_port": 36271,
+                    "protocol_number": 6,
+                    "src_ip": 1728161984,
+                    "src_port": 5204
+                }
+            ],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1694607552,
+                1711384768,
+                1728161984,
+                1744939200
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 3,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1761716416,
+                1778493632,
+                1795270848,
+                1812048064
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 4,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [
+                {
+                    "dst_ip": 1275177152,
+                    "dst_port": 5204,
+                    "protocol_number": 6,
+                    "src_ip": 1862379712,
+                    "src_port": 53887
+                }
+            ],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1828825280,
+                1845602496,
+                1862379712,
+                1879156928
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 5,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1895934144,
+                1912711360,
+                1929488576,
+                1946265792
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 6,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                1963043008,
+                1979820224,
+                1996597440,
+                2013374656
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 7,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                2030151872,
+                2046929088,
+                2063706304,
+                2080483520
+            ]
+        },
+        {
+            "dst_dpid": 106225808380928,
+            "dst_interface": 8,
+            "dst_ip": [
+                168430090
+            ],
+            "flow_set": [],
+            "is_enabled": false,
+            "is_up": false,
+            "left_link_bandwidth_bps": 1000000000,
+            "link_bandwidth_bps": 1000000000,
+            "link_bandwidth_usage_bps": 0,
+            "link_bandwidth_utilization_percent": 0.0,
+            "src_dpid": 0,
+            "src_interface": 0,
+            "src_ip": [
+                2097260736,
+                2114037952,
+                2130815168,
+                2147592384
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 3,
+            "device_name": "s1",
+            "dpid": 106225808402492,
+            "ecmp_groups": [
+                {
+                    "members": [
+                        {
+                            "port_id": 21,
+                            "type": "port"
+                        },
+                        {
+                            "port_id": 22,
+                            "type": "port"
+                        }
+                    ]
+                }
+            ],
+            "ip": [
+                67766794
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch1",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 3,
+            "device_name": "s2",
+            "dpid": 106225808387660,
+            "ecmp_groups": [
+                {
+                    "members": [
+                        {
+                            "port_id": 21,
+                            "type": "port"
+                        },
+                        {
+                            "port_id": 22,
+                            "type": "port"
+                        }
+                    ]
+                }
+            ],
+            "ip": [
+                50989578
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch2",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 3,
+            "device_name": "s3",
+            "dpid": 106225808391692,
+            "ecmp_groups": [
+                {
+                    "members": [
+                        {
+                            "port_id": 21,
+                            "type": "port"
+                        },
+                        {
+                            "port_id": 22,
+                            "type": "port"
+                        }
+                    ]
+                }
+            ],
+            "ip": [
+                151652874
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch3",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 3,
+            "device_name": "s4",
+            "dpid": 106225808380928,
+            "ecmp_groups": [
+                {
+                    "members": [
+                        {
+                            "port_id": 21,
+                            "type": "port"
+                        },
+                        {
+                            "port_id": 22,
+                            "type": "port"
+                        }
+                    ]
+                }
+            ],
+            "ip": [
+                168430090
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch4",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 2,
+            "device_name": "s5",
+            "dpid": 106225808403428,
+            "ecmp_groups": [],
+            "ip": [
+                201984522
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch6",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 2,
+            "device_name": "s6",
+            "dpid": 106225803167444,
+            "ecmp_groups": [],
+            "ip": [
+                218761738
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch7",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 2,
+            "device_name": "s7",
+            "dpid": 106225808384924,
+            "ecmp_groups": [],
+            "ip": [
+                235538954
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch8",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 2,
+            "device_name": "s8",
+            "dpid": 106225808398208,
+            "ecmp_groups": [],
+            "ip": [
+                252316170
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch9",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "BrocadeICX7250",
+            "device_layer": 1,
+            "device_name": "s9",
+            "dpid": 106225808382584,
+            "ecmp_groups": [
+                {
+                    "members": [
+                        {
+                            "port_id": 1,
+                            "type": "port"
+                        },
+                        {
+                            "port_id": 2,
+                            "type": "port"
+                        }
+                    ]
+                },
+                {
+                    "members": [
+                        {
+                            "port_id": 3,
+                            "type": "port"
+                        },
+                        {
+                            "port_id": 4,
+                            "type": "port"
+                        }
+                    ]
+                }
+            ],
+            "ip": [
+                1678379530
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 0,
+            "nickname": "ofswitch11",
+            "vertex_type": 0
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h1",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                16885952,
+                33663168,
+                50440384,
+                67217600
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038116569,
+            "nickname": "h1",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h2",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                83994816,
+                100772032,
+                117549248,
+                134326464
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038116568,
+            "nickname": "h2",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h3",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                151103680,
+                167880896,
+                184658112,
+                201435328
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038116570,
+            "nickname": "h3",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h4",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                218212544,
+                234989760,
+                251766976,
+                268544192
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038116571,
+            "nickname": "h4",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h5",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                285321408,
+                302098624,
+                318875840,
+                335653056
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038438982,
+            "nickname": "h5",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h6",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                352430272,
+                369207488,
+                385984704,
+                402761920
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038438983,
+            "nickname": "h6",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h7",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                419539136,
+                436316352,
+                453093568,
+                469870784
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038438984,
+            "nickname": "h7",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h8",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                486648000,
+                503425216,
+                520202432,
+                536979648
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038438985,
+            "nickname": "h8",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h9",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                553756864,
+                570534080,
+                587311296,
+                604088512
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038109890,
+            "nickname": "h9",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h10",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                620865728,
+                637642944,
+                654420160,
+                671197376
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038109889,
+            "nickname": "h10",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h11",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                687974592,
+                704751808,
+                721529024,
+                738306240
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038109891,
+            "nickname": "h11",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h12",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                755083456,
+                771860672,
+                788637888,
+                805415104
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038109892,
+            "nickname": "h12",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h13",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                822192320,
+                838969536,
+                855746752,
+                872523968
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704234,
+            "nickname": "h13",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h14",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                889301184,
+                906078400,
+                922855616,
+                939632832
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704235,
+            "nickname": "h14",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h15",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                956410048,
+                973187264,
+                989964480,
+                1006741696
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704236,
+            "nickname": "h15",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h16",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1023518912,
+                1040296128,
+                1057073344,
+                1073850560
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704237,
+            "nickname": "h16",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h17",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1090627776,
+                1107404992,
+                1124182208,
+                1140959424
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704194,
+            "nickname": "h17",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h18",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1157736640,
+                1174513856,
+                1191291072,
+                1208068288
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704195,
+            "nickname": "h18",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h19",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1224845504,
+                1241622720,
+                1258399936,
+                1275177152
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704196,
+            "nickname": "h19",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h20",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1291954368,
+                1308731584,
+                1325508800,
+                1342286016
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038704197,
+            "nickname": "h20",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h21",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1359063232,
+                1375840448,
+                1392617664,
+                1409394880
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703242,
+            "nickname": "h21",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h22",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1426172096,
+                1442949312,
+                1459726528,
+                1476503744
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703243,
+            "nickname": "h22",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h23",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1493280960,
+                1510058176,
+                1526835392,
+                1543612608
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703244,
+            "nickname": "h23",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h24",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1560389824,
+                1577167040,
+                1593944256,
+                1610721472
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703245,
+            "nickname": "h24",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h25",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1627498688,
+                1644275904,
+                1661053120,
+                1677830336
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038117125,
+            "nickname": "h25",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h26",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1694607552,
+                1711384768,
+                1728161984,
+                1744939200
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038117124,
+            "nickname": "h26",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h27",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1761716416,
+                1778493632,
+                1795270848,
+                1812048064
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038117126,
+            "nickname": "h27",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h28",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1828825280,
+                1845602496,
+                1862379712,
+                1879156928
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038117127,
+            "nickname": "h28",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h29",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1895934144,
+                1912711360,
+                1929488576,
+                1946265792
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703330,
+            "nickname": "h29",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h30",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                1963043008,
+                1979820224,
+                1996597440,
+                2013374656
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703331,
+            "nickname": "h30",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h31",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                2030151872,
+                2046929088,
+                2063706304,
+                2080483520
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703332,
+            "nickname": "h31",
+            "vertex_type": 1
+        },
+        {
+            "brand_name": "",
+            "device_layer": 4,
+            "device_name": "h32",
+            "dpid": 0,
+            "ecmp_groups": [],
+            "ip": [
+                2097260736,
+                2114037952,
+                2130815168,
+                2147592384
+            ],
+            "is_enabled": true,
+            "is_up": true,
+            "mac": 31362038703333,
+            "nickname": "h32",
+            "vertex_type": 1
+        }
+    ]
+}
