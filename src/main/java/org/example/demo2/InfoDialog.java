@@ -301,11 +301,11 @@ public class InfoDialog {
             // Display all IP aliases
             List<String> allIps = new ArrayList<>();
             for (String ip : node.ips) {
-                allIps.add(convertLittleEndianIpStringToStandard(ip));
+                allIps.add(convertIpStringForDisplay(ip));
             }
             displayIp = String.join(", ", allIps);
         } else if (node.ip != null && !node.ip.isEmpty()) {
-            displayIp = convertLittleEndianIpStringToStandard(node.ip);
+            displayIp = convertIpStringForDisplay(node.ip);
         }
         HBox ipBox = createInfoRow("Management IP", displayIp, false);
         deviceInfoBox.getChildren().add(ipBox);
@@ -400,9 +400,9 @@ public class InfoDialog {
         
         String displayIp = "";
         if (node.ips != null && !node.ips.isEmpty()) {
-            displayIp = convertLittleEndianIpStringToStandard(node.ips.get(0));
+            displayIp = convertIpStringForDisplay(node.ips.get(0));
         } else if (node.ip != null && !node.ip.isEmpty()) {
-            displayIp = convertLittleEndianIpStringToStandard(node.ip);
+            displayIp = convertIpStringForDisplay(node.ip);
         }
         Label deviceIpLabel = new Label("IP: " + displayIp);
         
@@ -826,7 +826,7 @@ public class InfoDialog {
                 if (empty || item == null || item.flow == null) {
                     setGraphic(null);
                 } else {
-                    // 使用 TopologyCanvas 的統一顏色邏輯（hash five-tuple + Color specification）
+                    
                     Color flowColor = topologyCanvas.getColorForFlow(item.flow);
                     javafx.scene.shape.Rectangle colorRectangle = new javafx.scene.shape.Rectangle(16, 12, flowColor);
                     colorRectangle.setStroke(Color.BLACK);
@@ -983,16 +983,16 @@ public class InfoDialog {
             String srcKey = flowWithDir.sourceIp;
             String dstKey = flowWithDir.targetIp;
 
-            // 只顯示「這條帶方向的 flow」本身，避免把同一條 link 上其他 direction 或其他 flow 一起加進來
+            
             for (Link l : currentLinks) {
                 if (l.sourceIps == null || l.targetIps == null) continue;
 
                 for (String lsrc : l.sourceIps) {
                     for (String ldst : l.targetIps) {
-                        String lsrcStr = lsrc; // 已是標準 IP
+                        String lsrcStr = lsrc; 
                         String ldstStr = ldst;
 
-                        // 僅當此 link 的端點與 flowWithDir 的 source/target 對上時，才視為這條 link
+                        
                         if ((lsrcStr.equals(srcKey) && ldstStr.equals(dstKey)) ||
                             (lsrcStr.equals(dstKey) && ldstStr.equals(srcKey))) {
 
@@ -1001,7 +1001,7 @@ public class InfoDialog {
 
                             if (l.flow_set != null) {
                                 for (Flow flowInSet : l.flow_set) {
-                                    // 僅加入與這個 flowWithDir 對應的那一條 flow
+                                    
                                     if (flowInSet == flowWithDir.flow) {
                                         Flow completeFlow = findCompleteFlowInfo(flowInSet);
                                         Flow displayFlow = (completeFlow != null) ? completeFlow : flowInSet;
@@ -1039,7 +1039,7 @@ public class InfoDialog {
     private void updateAllFlowData(TableView<FlowTableItem> table, Label title) {
             table.getItems().clear();
         
-        // 檢查是否有 flows 數據
+        
         if (allFlows == null || allFlows.isEmpty()) {
             title.setText("No Flows Detected on the Network");
             return;
@@ -1047,17 +1047,17 @@ public class InfoDialog {
         
             List<FlowTableItem> allFlowItems = allFlows.stream()
                 .map(flow -> {
-                    // 使用 pathNodes 來確定正確的方向
+                    
                     String direction;
                     if (flow.pathNodes != null && flow.pathNodes.size() >= 2) {
-                        // 使用路徑的第一個和最後一個節點
+                        
                         String firstNodeIp = flow.pathNodes.getFirst();
                         String lastNodeIp = flow.pathNodes.getLast();
                         Node firstNode = topologyCanvas.getNodeByIp(firstNodeIp);
                         Node lastNode = topologyCanvas.getNodeByIp(lastNodeIp);
                         direction = (firstNode != null ? firstNode.name : firstNodeIp) + " → " + (lastNode != null ? lastNode.name : lastNodeIp);
                     } else {
-                        // 如果沒有路徑信息，回退到使用 srcIp 和 dstIp
+                        
                         Node srcNode = topologyCanvas.getNodeByIp(flow.srcIp);
                         Node dstNode = topologyCanvas.getNodeByIp(flow.dstIp);
                         direction = (srcNode != null ? srcNode.name : flow.srcIp) + " → " + (dstNode != null ? dstNode.name : flow.dstIp);
@@ -1069,50 +1069,50 @@ public class InfoDialog {
             table.getItems().addAll(allFlowItems);
         title.setText("All Flows Detected on the Network (" + allFlowItems.size() + " flows):");
         
-        // 刷新表格
+        
         table.refresh();
     }
 
 
 
-    // Link Only模式：顯示link信息和使用率長條圖
+    
     public void showLinkOnlyInfo(List<Link> clickedLinks) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.NONE);
         dialog.setTitle("Link Information");
         dialog.setWidth(800);
         dialog.setHeight(600);
-        dialog.setResizable(false); // 固定大小，不能調整
+        dialog.setResizable(false); 
 
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #f9f9f9;");
 
-        // 方向選擇狀態
+        
         final String[] selectedDirection = {"forward"}; // "forward", "backward"
 
-        // 創建內容區域（使用 ScrollPane）
+        
         VBox contentArea = new VBox(10);
         contentArea.setPadding(new Insets(10));
         
-        // 使用 ScrollPane 包裝內容
+        
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(contentArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        // 創建按鈕區域
+        
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         buttonBox.setPadding(new Insets(20, 0, 0, 0));
 
-        // 獲取第一個 link 的節點名稱來設置按鈕文字
+        
         String forwardButtonText = "";
         String backwardButtonText = "";
         if (!clickedLinks.isEmpty()) {
             Link firstLink = clickedLinks.get(0);
-            // 從 TopologyCanvas 獲取最新的 link 數據來確保一致性
+            
             List<Link> currentLinks = topologyCanvas.getLinks();
             Link currentFirstLink = currentLinks.stream()
                 .filter(l -> l.source.equals(firstLink.source) && l.target.equals(firstLink.target))
@@ -1130,18 +1130,18 @@ public class InfoDialog {
             backwardButtonText = "backward";
         }
         
-        // 方向按鈕
+        
         Button forwardButton = new Button(forwardButtonText);
         Button backwardButton = new Button(backwardButtonText);
         
-        // 設置按鈕樣式
+        
         String buttonStyle = "-fx-background-color: linear-gradient(to bottom, #4a90e2, #357abd); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 16; -fx-background-radius: 6; -fx-border-radius: 6; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);";
         String selectedButtonStyle = "-fx-background-color: linear-gradient(to bottom, #28a745, #1e7e34); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 16; -fx-background-radius: 6; -fx-border-radius: 6; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 0, 2);";
         
-        forwardButton.setStyle(selectedButtonStyle); // 預設選中
+        forwardButton.setStyle(selectedButtonStyle); 
         backwardButton.setStyle(buttonStyle);
         
-        // 按鈕事件
+        
         forwardButton.setOnAction(e -> {
             selectedDirection[0] = "forward";
             forwardButton.setStyle(selectedButtonStyle);
@@ -1156,24 +1156,24 @@ public class InfoDialog {
             updateLinkData(clickedLinks, contentArea, selectedDirection[0]);
         });
 
-        // Close 按鈕
+        
         Button closeButton = new Button("Close");
         closeButton.setStyle("-fx-background-color: linear-gradient(to bottom, #dc3545, #c82333); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 16; -fx-background-radius: 6; -fx-border-radius: 6; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);");
         closeButton.setOnAction(e -> dialog.close());
 
         buttonBox.getChildren().addAll(forwardButton, backwardButton, closeButton);
 
-        // 創建實時更新定時器
+        
         Timeline updateTimer = new Timeline(
             new KeyFrame(Duration.seconds(1), e -> updateLinkData(clickedLinks, contentArea, selectedDirection[0]))
         );
         updateTimer.setCycleCount(Timeline.INDEFINITE);
         updateTimer.play();
 
-        // 當對話框關閉時停止定時器
+        
         dialog.setOnCloseRequest(e -> updateTimer.stop());
 
-        // 初始顯示
+        
         updateLinkData(clickedLinks, contentArea, selectedDirection[0]);
 
         root.getChildren().addAll(scrollPane, buttonBox);
@@ -1184,57 +1184,57 @@ public class InfoDialog {
     }
 
     private void updateLinkData(List<Link> clickedLinks, VBox contentArea, String direction) {
-        // 清除所有內容
+        
         contentArea.getChildren().clear();
 
-        // 從 TopologyCanvas 獲取最新的 link 數據
+        
         List<Link> currentLinks = topologyCanvas.getLinks();
 
         for (Link originalLink : clickedLinks) {
-            // 找到對應的最新 link 數據
+            
             Link currentLink = currentLinks.stream()
                 .filter(l -> l.source.equals(originalLink.source) && l.target.equals(originalLink.target))
                 .findFirst()
-                .orElse(originalLink); // 如果找不到，使用原始數據
+                .orElse(originalLink); 
 
-            // 找到對應的反向 link 數據
+            
             Link reverseLink = currentLinks.stream()
                 .filter(l -> l.source.equals(originalLink.target) && l.target.equals(originalLink.source))
                 .findFirst()
                 .orElse(null);
 
-            // 根據方向選擇顯示對應的節點名稱和link信息
+            
             Node srcNode, tgtNode;
             String linkName;
             Link displayLink;
             
             if ("backward".equals(direction) && reverseLink != null) {
-                // Backward方向：顯示反向link
+                
                 srcNode = topologyCanvas.getNodeByIp(reverseLink.source);
                 tgtNode = topologyCanvas.getNodeByIp(reverseLink.target);
                 linkName = (srcNode != null ? srcNode.name : convertIpStringForLinkInfoDisplay(reverseLink.source)) + " → " + (tgtNode != null ? tgtNode.name : convertIpStringForLinkInfoDisplay(reverseLink.target));
                 displayLink = reverseLink;
             } else {
-                // Forward方向或both：顯示原始link
+                
                 srcNode = topologyCanvas.getNodeByIp(currentLink.source);
                 tgtNode = topologyCanvas.getNodeByIp(currentLink.target);
                 linkName = (srcNode != null ? srcNode.name : convertIpStringForLinkInfoDisplay(currentLink.source)) + " → " + (tgtNode != null ? tgtNode.name : convertIpStringForLinkInfoDisplay(currentLink.target));
                 displayLink = currentLink;
             }
             
-            // Information 標題
+            
             Label infoTitleLabel = new Label("Information");
             infoTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
             infoTitleLabel.setStyle("-fx-text-fill: #2c3e50; -fx-padding: 5;");
             contentArea.getChildren().add(infoTitleLabel);
             
-            // Link基本信息
+            
             Label linkNameLabel = new Label("Link: " + linkName);
             linkNameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
             linkNameLabel.setStyle("-fx-text-fill: #2c3e50; -fx-background-color: #ecf0f1; -fx-padding: 5; -fx-border-color: #bdc3c7; -fx-border-width: 1;");
             contentArea.getChildren().add(linkNameLabel);
             
-            // 根據方向選擇顯示對應的使用率
+            
             double utilization = 0.0;
             String utilizationInfo = "";
             
@@ -1253,7 +1253,7 @@ public class InfoDialog {
                 if (reverseLink != null) {
                     double forwardUtil = currentLink.link_bandwidth_utilization_percent;
                     double backwardUtil = reverseLink.link_bandwidth_utilization_percent;
-                    utilization = Math.max(forwardUtil, backwardUtil); // 顯示較高的使用率
+                    utilization = Math.max(forwardUtil, backwardUtil); 
                     utilizationInfo = String.format("Forward: %.2f%%, Backward: %.2f%%", forwardUtil, backwardUtil);
                 } else {
                     utilization = currentLink.link_bandwidth_utilization_percent;
@@ -1261,7 +1261,7 @@ public class InfoDialog {
                 }
             }
             
-            // 計算flow numbers
+            
             int flowNumbers = 0;
             if ("forward".equals(direction)) {
                 // Forward: count flows in current link
@@ -1276,7 +1276,7 @@ public class InfoDialog {
                 flowNumbers = forwardFlows + backwardFlows;
             }
             
-            // Link詳細信息
+            
             String linkInfo = "Source IP: " + convertIpStringForLinkInfoDisplay(displayLink.source) + "\n" +
                     "Target IP: " + convertIpStringForLinkInfoDisplay(displayLink.target) + "\n" +
                     "Bandwidth: " + displayLink.bandwidth + " bps\n" +
@@ -1291,7 +1291,7 @@ public class InfoDialog {
             linkInfoLabel.setWrapText(true);
             contentArea.getChildren().add(linkInfoLabel);
             
-                        // 水平堆疊長條圖
+                        
             NumberAxis xAxis = new NumberAxis(0, 100, 10);
             CategoryAxis yAxis = new CategoryAxis();
             xAxis.setLabel("Utilization (%)");
@@ -1302,12 +1302,12 @@ public class InfoDialog {
             barChart.setMinSize(300, 150);
             barChart.setPrefSize(400, 200);
             
-            // 添加 LIVE 指示器
+            
             Label liveLabel = new Label("LIVE");
             liveLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
             liveLabel.setStyle("-fx-text-fill: #ff4444; -fx-background-color: #ffeeee; -fx-padding: 2 6; -fx-border-color: #ff4444; -fx-border-width: 1; -fx-border-radius: 3;");
             
-            // 創建 LIVE 指示器的動畫效果
+            
             Timeline liveAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO, e -> liveLabel.setOpacity(1.0)),
                 new KeyFrame(Duration.seconds(0.5), e -> liveLabel.setOpacity(0.3)),
@@ -1316,24 +1316,24 @@ public class InfoDialog {
             liveAnimation.setCycleCount(Timeline.INDEFINITE);
             liveAnimation.play();
             
-            // 處理使用率數據：使用根據方向選擇計算的 utilization
+            
             double unused = 100.0 - utilization;
             
-            // 創建單一長條，包含兩個堆疊部分
+            
             XYChart.Series<Number, String> series = new XYChart.Series<>();
             series.setName("Bandwidth");
             
-            // 先添加未使用部分（作為基礎）
+            
             XYChart.Data<Number, String> unusedData = new XYChart.Data<>(unused, "Bandwidth");
             series.getData().add(unusedData);
             
-            // 再添加已使用部分（堆疊在上面）
+            
             XYChart.Data<Number, String> usedData = new XYChart.Data<>(utilization, "Bandwidth");
             series.getData().add(usedData);
             
             barChart.getData().add(series);
             
-            // 添加實際利用率信息
+            
             Label actualUtilizationLabel = new Label(String.format("Actual Utilization: %.2f%%", utilization));
             actualUtilizationLabel.setFont(Font.font("Arial", 10));
             actualUtilizationLabel.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 3; -fx-border-color: #cccccc; -fx-border-width: 1;");
@@ -1344,7 +1344,7 @@ public class InfoDialog {
             chartContainer.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1;");
             contentArea.getChildren().add(chartContainer);
             
-            // 分隔線
+            
             if (clickedLinks.size() > 1) {
                 Separator separator = new Separator();
                 separator.setPadding(new Insets(10, 0, 10, 0));
@@ -1355,7 +1355,7 @@ public class InfoDialog {
 
 
 
-    // ===== 新增：Port Table 彈窗 =====
+    
     private void showPortTableDialog() {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -1367,7 +1367,7 @@ public class InfoDialog {
         root.setStyle("-fx-background-color: #f9f9f9;");
         TableView<Map<String, String>> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        // 讀取porttable.json
+        
         List<Map<String, String>> portRows = new ArrayList<>();
         try (java.io.FileReader reader = new java.io.FileReader("porttable.json")) {
             com.google.gson.Gson gson = new com.google.gson.Gson();
@@ -1378,7 +1378,7 @@ public class InfoDialog {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // 動態產生欄位
+        
         if (!portRows.isEmpty()) {
             for (String key : portRows.getFirst().keySet()) {
                 if (key.equals("port")) {
@@ -1400,14 +1400,14 @@ public class InfoDialog {
                     col.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(key)));
                     col.setSortable(true);
                     
-                    // 設置欄位寬度和文字換行
+                    
                     if (key.equals("description") || key.equals("protocol")) {
-                        // 對於 description 和 protocol 欄位，設置較寬的寬度並允許文字換行
+                        
                         col.setPrefWidth(150);
                         col.setMinWidth(120);
                         col.setMaxWidth(200);
                         
-                        // 設置文字換行
+                        
                         col.setCellFactory(tc -> new TableCell<Map<String, String>, String>() {
                             @Override
                             protected void updateItem(String item, boolean empty) {
@@ -1423,7 +1423,7 @@ public class InfoDialog {
                             }
                         });
                     } else {
-                        // 其他欄位使用默認設置
+                        
                         col.setPrefWidth(80);
                         col.setMinWidth(60);
                     }
@@ -1450,11 +1450,11 @@ public class InfoDialog {
         System.out.println("[TEMP] showFlowSetInfo called with " + clickedLinks.size() + " links");
         if (clickedLinks.isEmpty()) return;
         
-        // 檢查是否為 playback 模式
+        
         boolean isPlaybackMode = topologyCanvas != null && topologyCanvas.isPlaybackMode();
         String dialogTitle = isPlaybackMode ? "Flow Information (Playback)" : "Flow Information (Live)";
         
-        // 如果 dialog 不存在或未顯示，則創建新的
+        
         if (dialog == null || !dialog.isShowing()) {
             if (dialog == null) {
                 dialog = new Stage();
@@ -1474,32 +1474,32 @@ public class InfoDialog {
             dialog.setScene(scene);
             dialog.show();
         } else {
-            // 更新對話框標題
+            
             dialog.setTitle(dialogTitle);
-            // 如果 dialog 已經存在且正在顯示，則只更新數據而不重新創建表格
-            // 這樣可以保持排序狀態
+            
+            
             updateFlowSetInfoData(clickedLinks);
         }
     }
     
     private void updateFlowSetInfoData(List<Link> clickedLinks) {
-        // 只更新表格數據，不重新創建表格，保持排序狀態
+        
         if (dialog != null && dialog.isShowing()) {
             Scene scene = dialog.getScene();
             if (scene != null) {
-                // 找到表格和標題標籤並更新數據
+                
                 VBox root = (VBox) scene.getRoot();
                 Label titleLabel = null;
                 TableView<FlowTableItem> table = null;
                 
-                // 查找 headerContainer 中的 titleLabel
+                
                 for (javafx.scene.Node node : root.getChildren()) {
                     if (node instanceof VBox) {
                         VBox headerContainer = (VBox) node;
-                        // 檢查是否是 headerContainer（包含 titleLabel）
+                        
                         for (javafx.scene.Node headerNode : headerContainer.getChildren()) {
                             if (headerNode instanceof HBox) {
-                                // 跳過 HBox（包含 LIVE 指示器和方向按鈕）
+                                
                                 continue;
                             } else if (headerNode instanceof Label) {
                                 titleLabel = (Label) headerNode;
@@ -1508,7 +1508,7 @@ public class InfoDialog {
                     }
                 }
                 
-                // 查找表格
+                
                 for (javafx.scene.Node node : root.getChildren()) {
                     if (node instanceof VBox) {
                         VBox contentArea = (VBox) node;
@@ -1524,17 +1524,17 @@ public class InfoDialog {
                 }
                 
                 if (table != null) {
-                    // 更新表格數據
+                    
                     updateFlowSetTableData(clickedLinks, table);
                     
-                    // 更新標題中的 flow 數量（保留原有標題格式，只更新 flow 數量）
+                    
                     if (titleLabel != null) {
                         int flowCount = table.getItems().size();
                         String currentText = titleLabel.getText();
                         
-                        // 如果標題中已經有 flow 數量，則替換它；否則添加 flow 數量
+                        
                         if (currentText.contains(" flows)")) {
-                            // 找到最後一個 "(" 的位置，替換 flow 數量
+                            
                             int lastOpenParen = currentText.lastIndexOf(" (");
                             if (lastOpenParen > 0) {
                                 String baseText = currentText.substring(0, lastOpenParen);
@@ -1543,7 +1543,7 @@ public class InfoDialog {
                                 titleLabel.setText(currentText.replaceAll("\\(\\d+ flows\\)", "(" + flowCount + " flows)"));
                             }
                         } else {
-                            // 如果標題中沒有 flow 數量，則添加
+                            
                             titleLabel.setText(currentText + " (" + flowCount + " flows)");
                         }
                     }
@@ -1553,20 +1553,20 @@ public class InfoDialog {
     }
     
     private void updateFlowSetTableData(List<Link> clickedLinks, TableView<FlowTableItem> table) {
-        // 保存當前的排序狀態
+        
         List<TableColumn<FlowTableItem, ?>> sortOrder = new ArrayList<>(table.getSortOrder());
         
-        // 清空並重新填充數據
+        
         table.getItems().clear();
         
-        // 收集所有經過選中links的flows
+        
         List<FlowTableItem> flowItems = new ArrayList<>();
         for (Link link : clickedLinks) {
             if (link.flow_set != null) {
                 for (Flow flowInSet : link.flow_set) {
                     Flow completeFlow = findCompleteFlowInfo(flowInSet);
                     if (completeFlow != null) {
-                        // 使用反轉字節順序顯示
+                        
                         String convertedSrcIp = convertIpStringForDisplay(completeFlow.srcIp);
                         String convertedDstIp = convertIpStringForDisplay(completeFlow.dstIp);
                         flowItems.add(new FlowTableItem(completeFlow, "→", convertedSrcIp, convertedDstIp));
@@ -1577,7 +1577,7 @@ public class InfoDialog {
         
         table.getItems().addAll(flowItems);
         
-        // 恢復排序狀態
+        
         table.getSortOrder().clear();
         table.getSortOrder().addAll(sortOrder);
     }
@@ -1649,7 +1649,7 @@ public class InfoDialog {
                 if (empty || item == null || item.flow == null) {
                     setGraphic(null);
                 } else {
-                    // 使用 TopologyCanvas 的統一顏色邏輯（hash five-tuple + Color specification）
+                    
                     Color flowColor = topologyCanvas.getColorForFlow(item.flow);
                     javafx.scene.shape.Rectangle colorRectangle = new javafx.scene.shape.Rectangle(16, 12, flowColor);
                     colorRectangle.setStroke(Color.BLACK);
@@ -1723,7 +1723,7 @@ public class InfoDialog {
         titleLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Segoe UI', Arial, sans-serif;");
         titleLabel.setAlignment(Pos.CENTER_LEFT);
         
-        // Function to update flow table（依 pathNodes 嚴格判斷方向，並從 allFlows 中過濾）
+        
         Runnable refreshFlowTable = () -> {
             table.getItems().clear();
             List<FlowTableItem> flowItems = new ArrayList<>();
@@ -1735,12 +1735,12 @@ public class InfoDialog {
                 return;
             }
 
-            // 以第一條被點選的 link 作為基準（IP 方向由這條 link 決定）
+            
             Link baseLink = clickedLinks.get(0);
             String linkSrcIp;
             String linkDstIp;
 
-            // Real-time 模式：使用 sourceIps / targetIps；Playback：使用 source / target
+            
             if (baseLink.sourceIps != null && !baseLink.sourceIps.isEmpty() &&
                 baseLink.targetIps != null && !baseLink.targetIps.isEmpty()) {
                 linkSrcIp = topologyCanvas.convertNodeIdToIp(baseLink.sourceIps.get(0));
@@ -1756,14 +1756,14 @@ public class InfoDialog {
             String linkDstName = (linkDstNode != null ? linkDstNode.name : linkDstIp);
 
             for (Flow flow : allFlows) {
-                // 先取得完整 flow（若有 detected_flow 補充）
+                
                 Flow completeFlow = findCompleteFlowInfo(flow);
                 Flow flowToUse = (completeFlow != null) ? completeFlow : flow;
 
                 boolean passesForward  = isFlowInDirection(flowToUse, linkSrcIp, linkDstIp, linkSrcName, linkDstName);
                 boolean passesBackward = isFlowInDirection(flowToUse, linkDstIp, linkSrcIp, linkDstName, linkSrcName);
 
-                // 沒有經過這條 link，任何方向都不顯示
+                
                 if (!passesForward && !passesBackward) {
                     continue;
                 }
@@ -1783,13 +1783,13 @@ public class InfoDialog {
                         }
                         break;
                     case "both":
-                        // 在 both 模式下，同一條 flow 只在「實際方向」那一邊顯示一次，不重複
+                        
                         if (passesForward && !passesBackward) {
                             flowItems.add(new FlowTableItem(flowToUse, "Forward", displaySrcIp, displayDstIp));
                         } else if (passesBackward && !passesForward) {
                             flowItems.add(new FlowTableItem(flowToUse, "Backward", displaySrcIp, displayDstIp));
                         } else if (passesForward && passesBackward) {
-                            // 理論上很少見；預設只當作 Forward 顯示一次，避免重複
+                            
                             flowItems.add(new FlowTableItem(flowToUse, "Forward", displaySrcIp, displayDstIp));
                         }
                         break;
@@ -1800,10 +1800,10 @@ public class InfoDialog {
 
             table.getItems().addAll(flowItems);
             
-            // 計算 flow 數量
+            
             int flowCount = flowItems.size();
             
-            // Update title with link information and flow count（不再顯示 Forward/Backward 文案）
+            
             if (!clickedLinks.isEmpty()) {
                 Link firstLink = clickedLinks.get(0);
                 String srcIp, dstIp;
@@ -1811,11 +1811,11 @@ public class InfoDialog {
                 // Handle different Link data structures (real-time vs playback)
                 if (firstLink.sourceIps != null && !firstLink.sourceIps.isEmpty() && 
                     firstLink.targetIps != null && !firstLink.targetIps.isEmpty()) {
-                    // Real-time mode: use sourceIps and targetIps lists (使用反轉字節順序顯示)
+                    
                     srcIp = convertIpStringForDisplay(String.valueOf(firstLink.sourceIps.get(0)));
                     dstIp = convertIpStringForDisplay(String.valueOf(firstLink.targetIps.get(0)));
                 } else if (firstLink.source != null && firstLink.target != null) {
-                    // Playback mode: use source and target strings (使用反轉字節順序顯示)
+                    
                     srcIp = convertIpStringForDisplay(firstLink.source);
                     dstIp = convertIpStringForDisplay(firstLink.target);
                 } else {
@@ -1825,7 +1825,7 @@ public class InfoDialog {
                 }
                 
                 String flowCountText = " (" + flowCount + " flows)";
-                // 只顯示 link 兩端 IP 與 flow 數量，不再加上 Forward/Backward 的括號文字
+                
                 titleLabel.setText("Link Flows information [" + srcIp + " ↔ " + dstIp + "]" + flowCountText);
             }
         };
@@ -1836,7 +1836,7 @@ public class InfoDialog {
             List<FlowTableItem> flowItems = new ArrayList<>();
             
             for (Flow flow : allFlows) {
-                // 使用反轉字節順序顯示
+                
                 String srcIp = convertIpStringForDisplay(flow.srcIp);
                 String dstIp = convertIpStringForDisplay(flow.dstIp);
                 
@@ -1846,7 +1846,7 @@ public class InfoDialog {
             }
             
             table.getItems().addAll(flowItems);
-            // 顯示全部 flow 數量
+            
             int totalFlowCount = flowItems.size();
             titleLabel.setText("All Flow Detected on the Network (" + totalFlowCount + " flows)");
         };
@@ -2062,7 +2062,7 @@ public class InfoDialog {
                 // Switch to all flows
                 currentMode[0] = "all_flows";
                 toggleFlowBtn.setText("Show Selected Link Flows");
-                // 隱藏方向按鈕（在 all_flows 模式下不需要）
+                
                 directionButtonBox.setVisible(false);
                 directionButtonBox.setManaged(false);
                 refreshAllFlowsTable.run();
@@ -2072,7 +2072,7 @@ public class InfoDialog {
                 // Switch to selected link flows
                 currentMode[0] = "selected_link";
                 toggleFlowBtn.setText("Show All Flows");
-                // 顯示方向按鈕（在 selected_link 模式下需要）
+                
                 directionButtonBox.setVisible(true);
                 directionButtonBox.setManaged(true);
                 refreshFlowTable.run();
@@ -2368,7 +2368,40 @@ public class InfoDialog {
                         // For Egress: node is source (sending)
                         if ((isIngress && !isSource) || (!isIngress && isSource)) {
                             String port = isSource ? String.valueOf(link.srcInterface) : String.valueOf(link.dstInterface);
-                            String connectedNode = isSource ? link.target : link.source;
+                            
+                            // Get connected node IP/name, handling both real-time and playback modes
+                            String connectedNode;
+                            if (isSource) {
+                                // Current node is source, connected node is target
+                                if (link.targetIps != null && !link.targetIps.isEmpty()) {
+                                    // Real-time mode: use targetIps
+                                    connectedNode = convertIpStringForDisplay(link.targetIps.get(0));
+                                } else if (link.target != null) {
+                                    // Playback mode: check if it's an IP address
+                                    if (isIpAddress(link.target)) {
+                                        connectedNode = convertIpStringForDisplay(link.target);
+                                    } else {
+                                        connectedNode = link.target;
+                                    }
+                                } else {
+                                    connectedNode = "Unknown";
+                                }
+                            } else {
+                                // Current node is target, connected node is source
+                                if (link.sourceIps != null && !link.sourceIps.isEmpty()) {
+                                    // Real-time mode: use sourceIps
+                                    connectedNode = convertIpStringForDisplay(link.sourceIps.get(0));
+                                } else if (link.source != null) {
+                                    // Playback mode: check if it's an IP address
+                                    if (isIpAddress(link.source)) {
+                                        connectedNode = convertIpStringForDisplay(link.source);
+                                    } else {
+                                        connectedNode = link.source;
+                                    }
+                                } else {
+                                    connectedNode = "Unknown";
+                                }
+                            }
                             
                             // Get flows for this link
                             VBox flowsBox = createFlowsBox(link);
@@ -2398,13 +2431,13 @@ public class InfoDialog {
         
         if (link.flow_set != null && !link.flow_set.isEmpty()) {
             for (Flow flowInSet : link.flow_set) {
-                // 使用完整的 Flow 資訊，確保和拓樸上一樣的五元組（src/dst IP + port + protocol）一致
+                
                 Flow completeFlow = findCompleteFlowInfo(flowInSet);
                 Flow flowForColor = completeFlow != null ? completeFlow : flowInSet;
                 
-                // ✅ 與拓樸畫面完全共用同一套顏色邏輯：
-                // 直接呼叫 TopologyCanvas.getColorForFlow，裡面會用 generateFlowKey + getStableColorIndex
-                // 這樣「Node Information → Show Port」中的顏色就會和連結上的 flow 顏色一致（同一條 flow 同一個顏色）。
+                
+                
+                
                 javafx.scene.paint.Color flowColor = topologyCanvas.getColorForFlow(flowForColor);
                 
                 // Create colored rectangle
@@ -2451,9 +2484,9 @@ public class InfoDialog {
         public VBox getFlows() { return flows; }
     }
     
-    /**
-     * 安全地獲取 Link 的源 IP 地址，支持 real-time 和 playback 模式
-     */
+    
+
+
     private String getLinkSourceIp(Link link) {
         if (link.sourceIps != null && !link.sourceIps.isEmpty()) {
             // Real-time mode: use sourceIps list
@@ -2465,9 +2498,9 @@ public class InfoDialog {
         return "Unknown";
     }
     
-    /**
-     * 安全地獲取 Link 的目標 IP 地址，支持 real-time 和 playback 模式
-     */
+    
+
+
     private String getLinkTargetIp(Link link) {
         if (link.targetIps != null && !link.targetIps.isEmpty()) {
             // Real-time mode: use targetIps list
@@ -2479,15 +2512,15 @@ public class InfoDialog {
         return "Unknown";
     }
     
-    /**
-     * 檢查flow是否經過指定方向的link
-     * @param flow 要檢查的flow
-     * @param linkSrcIp link的source IP
-     * @param linkDstIp link的target IP
-     * @param linkSrcName link的source設備名稱
-     * @param linkDstName link的target設備名稱
-     * @return true如果flow經過這個方向的link
-     */
+    
+
+
+
+
+
+
+
+
     private boolean isFlowInDirection(Flow flow, String linkSrcIp, String linkDstIp, String linkSrcName, String linkDstName) {
         if (flow == null || flow.pathNodes == null || flow.pathNodes.isEmpty()) {
             System.out.println("[TEMP] Flow has no path nodes");
@@ -2497,16 +2530,16 @@ public class InfoDialog {
         System.out.println("[TEMP] Checking if flow passes through: " + linkSrcName + "(" + linkSrcIp + ") -> " + linkDstName + "(" + linkDstIp + ")");
         System.out.println("[TEMP] Flow path has " + flow.pathNodes.size() + " nodes");
         
-        // 檢查flow的path中是否包含這個link（linkSrcIp/Name -> linkDstIp/Name的順序）
+        
         for (int i = 0; i < flow.pathNodes.size() - 1; i++) {
             String pathNodeId1 = flow.pathNodes.get(i);
             String pathNodeId2 = flow.pathNodes.get(i + 1);
             
-            // 將pathNode ID轉換為IP地址（使用TopologyCanvas的轉換邏輯）
+            
             String pathNodeIp1 = topologyCanvas.convertNodeIdToIp(pathNodeId1);
             String pathNodeIp2 = topologyCanvas.convertNodeIdToIp(pathNodeId2);
             
-            // 通過IP查找Node以獲取設備名稱
+            
             Node pathNode1Obj = topologyCanvas.getNodeByIp(pathNodeIp1);
             Node pathNode2Obj = topologyCanvas.getNodeByIp(pathNodeIp2);
             
@@ -2516,7 +2549,7 @@ public class InfoDialog {
             System.out.println("[TEMP] Path segment [" + i + "]: " + pathNodeId1 + " (" + pathNode1Name + "/" + pathNodeIp1 + ") -> " + 
                              pathNodeId2 + " (" + pathNode2Name + "/" + pathNodeIp2 + ")");
             
-            // 比較：檢查path segment是否匹配link的source->target（比較設備名稱或IP）
+            
             boolean match1 = pathNodeIp1.equals(linkSrcIp) || pathNode1Name.equals(linkSrcName);
             boolean match2 = pathNodeIp2.equals(linkDstIp) || pathNode2Name.equals(linkDstName);
             

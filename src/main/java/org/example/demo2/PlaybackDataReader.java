@@ -582,9 +582,9 @@ public class PlaybackDataReader {
         public List<Flow> flows = new ArrayList<>();
     }
     
-    /**
-     * 獲取所有topology快照的索引信息（用於智能對齊，不載入實際數據）
-     */
+    
+
+
     public List<NdjsonIndexUtil.IndexEntry> getAllTopologyIndexEntries() {
         if (topoIndex == null || topoIndex.entries.isEmpty()) {
             return new ArrayList<>();
@@ -592,9 +592,9 @@ public class PlaybackDataReader {
         return new ArrayList<>(topoIndex.entries);
     }
     
-    /**
-     * 獲取所有flow快照的索引信息（用於智能對齊，不載入實際數據）
-     */
+    
+
+
     public List<NdjsonIndexUtil.IndexEntry> getAllFlowIndexEntries() {
         if (flowIndex == null || flowIndex.entries.isEmpty()) {
             return new ArrayList<>();

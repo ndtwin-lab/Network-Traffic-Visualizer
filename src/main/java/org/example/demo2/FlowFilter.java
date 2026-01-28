@@ -155,8 +155,8 @@ public class FlowFilter extends VBox {
             String flowId = generateFlowId(flow);
             flowIdToIndexMap.put(flowId, i);
             
-            // ✅ 與拓樸顏色完全一致：直接用 TopologyCanvas.getColorForFlow
-            // 不再自行維護 colorIndex，完全交給 TopologyCanvas 依 five-tuple 穩定 hash 決定顏色。
+            
+            
             Color flowColor = topologyCanvas.getColorForFlow(flow);
             
             // Create icon with colored rectangle
@@ -194,7 +194,7 @@ public class FlowFilter extends VBox {
             checkBox.setGraphicTextGap(5);
             
             // Add tooltip (including detailed information)
-            String pathInfo = "無路徑信息";
+            String pathInfo = "No path info";
             if (flow.pathNodes != null && !flow.pathNodes.isEmpty()) {
                 List<String> deviceNames = flow.pathNodes.stream()
                     .map(this::getDeviceName)
@@ -279,10 +279,10 @@ public class FlowFilter extends VBox {
     }
 
     private void updateFlowVisibility() {
-        // 檢查是否啟用了 Top-K 模式
+        
         if (topologyCanvas.isTopKEnabled()) {
             System.out.println("[FLOW-FILTER] Top-K is enabled, skipping FlowFilter update to avoid conflict");
-            return; // Top-K 啟用時，不覆蓋 Top-K 的過濾設置
+            return; 
         }
         
         // Update flow visibility in topology

@@ -12,13 +12,13 @@ public class FilterButton extends HBox {
     private List<Flow> flows;
     private FlowFilterDialog flowFilterDialog;
     private final Button flowFilterButton;
-    private javafx.stage.Stage primaryStage; // 主窗口引用
+    private javafx.stage.Stage primaryStage; 
 
     public FilterButton(TopologyCanvas topologyCanvas, List<Flow> flows) {
         this.topologyCanvas = topologyCanvas;
         this.flows = flows;
         
-        // Create Flow Filter dialog（稍後設置 owner）
+        
         this.flowFilterDialog = new FlowFilterDialog(topologyCanvas, flows);
         
         setSpacing(10);
@@ -44,10 +44,10 @@ public class FilterButton extends HBox {
         return flowFilterDialog;
     }
     
-    // 設置主窗口引用（用於設置子窗口 owner）
+    
     public void setPrimaryStage(javafx.stage.Stage primaryStage) {
         this.primaryStage = primaryStage;
-        // 更新 FlowFilterDialog 的 owner
+        
         if (flowFilterDialog != null) {
             flowFilterDialog.setOwner(primaryStage);
         }

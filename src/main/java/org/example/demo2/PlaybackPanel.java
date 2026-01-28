@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 public class PlaybackPanel extends VBox {
     private final NetworkTopologyApp mainApp;
     
-    // 智能對齊策略的數據結構
+    
     private static class AlignedData {
         PlaybackDataReader.TopologySnapshot topoSnapshot;
         List<PlaybackDataReader.FlowSnapshot> flowSnapshots;
@@ -49,7 +49,7 @@ public class PlaybackPanel extends VBox {
     private PlaybackData playbackData;
     private int currentFrameIndex = 0;
     private boolean isPlaying = false;
-    private double playbackSpeed = 1.0; // 播放速度倍數
+    private double playbackSpeed = 1.0; 
     
     // File upload components
     private VBox flowDataPanel;
@@ -263,9 +263,9 @@ public class PlaybackPanel extends VBox {
     }
     
     private void initializeJumpToTimeComponents() {
-        // Year combo (范围：2000-2050)
+        
         jumpYearCombo = new ComboBox<>();
-        jumpYearCombo.setEditable(false); // 不可编辑，只能选择
+        jumpYearCombo.setEditable(false); 
         for (int year = 2000; year <= 2050; year++) {
             jumpYearCombo.getItems().add(year);
         }
@@ -348,7 +348,7 @@ public class PlaybackPanel extends VBox {
     
     private void setupLayout() {
         setSpacing(0);
-        setPadding(new Insets(10, 10, 10, 10)); // 上下左右统一padding
+        setPadding(new Insets(10, 10, 10, 10)); 
         setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #cccccc;");
         
         // Set preferred height - reduced for more compact layout
@@ -381,7 +381,7 @@ public class PlaybackPanel extends VBox {
     private VBox createCompactDataUploadSection() {
         VBox section = new VBox(5);
         
-        // Title - 放大字体
+        
         Label title = new Label("Open trace files");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         title.setStyle("-fx-text-fill: #2c3e50;");
@@ -390,7 +390,7 @@ public class PlaybackPanel extends VBox {
         HBox filePanels = new HBox(12);
         filePanels.setAlignment(Pos.CENTER_LEFT);
         
-        // Flow Data Panel (compact) - 优化样式
+        
         VBox flowDataCompact = new VBox(5);
         flowDataCompact.setPadding(new Insets(8));
         // Set style based on whether file is loaded
@@ -426,7 +426,7 @@ public class PlaybackPanel extends VBox {
         
         flowDataCompact.getChildren().addAll(flowHeader, flowStatus, flowBrowse);
         
-        // Graph Data Panel (compact) - 优化样式
+        
         VBox graphDataCompact = new VBox(5);
         graphDataCompact.setPadding(new Insets(8));
         graphDataCompact.setStyle("-fx-border-color: #bdc3c7; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-color: #ffffff; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);");
@@ -464,7 +464,7 @@ public class PlaybackPanel extends VBox {
     private VBox createCompactTimeRangeSection() {
         VBox section = new VBox(8);
         
-        // Title - 放大字体
+        
         Label title = new Label("Time range");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         title.setStyle("-fx-text-fill: #2c3e50;");
@@ -693,9 +693,9 @@ public class PlaybackPanel extends VBox {
     }
     
     // Helper method: Smoothly update progress from one value to another
-    // 简化版本：直接跳转到目标进度，不使用动画
+    
     private void smoothUpdateProgress(int fromPercent, int toPercent, long totalDurationMs) {
-        // 直接更新到目标进度，避免阻塞线程
+        
         javafx.application.Platform.runLater(() -> mainApp.updateProgress(toPercent));
     }
     
@@ -1224,7 +1224,7 @@ public class PlaybackPanel extends VBox {
     
     private void previousFrame() {
         if (timelineSlider != null) {
-            // 如果正在播放，先暂停
+            
             boolean wasPlaying = isPlaying;
             if (isPlaying) {
                 isPlaying = false;
@@ -1233,11 +1233,11 @@ public class PlaybackPanel extends VBox {
                 System.out.println("[PLAYBACK] Auto-paused for backward jump");
             }
             
-            // 往前跳5秒
+            
             double currentValue = timelineSlider.getValue();
             double newValue = Math.max(timelineSlider.getMin(), currentValue - 5);
             
-            // 设置标志，表示这是程序化更新
+            
             isUpdatingSliderProgrammatically = true;
             try {
                 timelineSlider.setValue(newValue);
@@ -1247,7 +1247,7 @@ public class PlaybackPanel extends VBox {
             
             System.out.println("[PLAYBACK] Previous: jumped from " + currentValue + "s to " + newValue + "s (backward 5 seconds)");
             
-            // 更新数据
+            
             if (dataReader != null && timeRange != null) {
                 long targetTime = timeRange.startTime + (long)(newValue * 1000L);
                 loadDataAtTime(targetTime);
@@ -1259,7 +1259,7 @@ public class PlaybackPanel extends VBox {
                 }
             }
             
-            // 通知状态变化（如果暂停了）
+            
             if (wasPlaying) {
                 notifyPlaybackStateChanged();
             }
@@ -1268,7 +1268,7 @@ public class PlaybackPanel extends VBox {
     
     private void nextFrame() {
         if (timelineSlider != null) {
-            // 如果正在播放，先暂停
+            
             boolean wasPlaying = isPlaying;
             if (isPlaying) {
                 isPlaying = false;
@@ -1277,11 +1277,11 @@ public class PlaybackPanel extends VBox {
                 System.out.println("[PLAYBACK] Auto-paused for forward jump");
             }
             
-            // 往後跳5秒
+            
             double currentValue = timelineSlider.getValue();
             double newValue = Math.min(timelineSlider.getMax(), currentValue + 5);
             
-            // 设置标志，表示这是程序化更新
+            
             isUpdatingSliderProgrammatically = true;
             try {
                 timelineSlider.setValue(newValue);
@@ -1291,7 +1291,7 @@ public class PlaybackPanel extends VBox {
             
             System.out.println("[PLAYBACK] Next: jumped from " + currentValue + "s to " + newValue + "s (forward 5 seconds)");
             
-            // 更新数据
+            
             if (dataReader != null && timeRange != null) {
                 long targetTime = timeRange.startTime + (long)(newValue * 1000L);
                 loadDataAtTime(targetTime);
@@ -1303,7 +1303,7 @@ public class PlaybackPanel extends VBox {
                 }
             }
             
-            // 通知状态变化（如果暂停了）
+            
             if (wasPlaying) {
                 notifyPlaybackStateChanged();
             }
@@ -1326,7 +1326,7 @@ public class PlaybackPanel extends VBox {
             System.out.println("[PLAYBACK] Starting playback");
             playPauseButton.setText("⏸");
             playPauseButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14;");
-            // 播放时，更新时间标签移除重播提示
+            
             updateCurrentTimeLabel();
             startPlayback();
         } else {
@@ -1334,11 +1334,11 @@ public class PlaybackPanel extends VBox {
             playPauseButton.setText("▶");
             playPauseButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14;");
             
-            // 暂停时，更新时间标签显示重播提示
+            
             updateCurrentTimeLabel();
         }
         
-        // 通知 SideBar 更新按鈕樣式
+        
         notifyPlaybackStateChanged();
     }
     
@@ -1357,10 +1357,10 @@ public class PlaybackPanel extends VBox {
         }
         loadFrame(0);
         
-        // 停止后更新时间标签显示重播提示
+        
         updateCurrentTimeLabel();
         
-        // 通知 SideBar 更新按鈕樣式
+        
         notifyPlaybackStateChanged();
     }
 
@@ -1402,7 +1402,7 @@ public class PlaybackPanel extends VBox {
             long timeStep = calculateTimeStep();
             System.out.println("[PLAYBACK] Starting playback with time step: " + timeStep + "ms");
             
-            // 从当前 slider 位置开始播放，而不是总是从开始位置
+            
             double currentSliderValue = timelineSlider.getValue();
             long currentTime = timeRange.startTime + (long)(currentSliderValue * 1000L);
             long endTime = timeRange.endTime;
@@ -1411,7 +1411,7 @@ public class PlaybackPanel extends VBox {
             
             while (isPlaying && currentTime < endTime) {
                 try {
-                    // 根據播放速度調整延遲時間
+                    
                     long delayMs = (long)(1000 / playbackSpeed);
                     Thread.sleep(delayMs);
                 } catch (InterruptedException e) {
@@ -1471,13 +1471,13 @@ public class PlaybackPanel extends VBox {
     
     private void startPlaybackDataPlayback() {
         new Thread(() -> {
-            // 从当前 slider 位置开始播放
+            
             currentFrameIndex = (int) timelineSlider.getValue();
             System.out.println("[PLAYBACK] Starting playback from frame: " + currentFrameIndex);
             
             while (isPlaying && currentFrameIndex < playbackData.playback.size() - 1) {
                 try {
-                    // 根據播放速度調整延遲時間
+                    
                     long delayMs = (long)(100 / playbackSpeed);
                     Thread.sleep(delayMs);
                 } catch (InterruptedException e) {
@@ -1523,11 +1523,11 @@ public class PlaybackPanel extends VBox {
             System.out.println("[PLAYBACK] Slider seconds: " + sliderSeconds + ", targetTime(ms): " + targetTime +
                 " (start: " + timeRange.startTime + ", durationMs: " + timeRange.duration + ")");
             
-            // 先更新时间标签显示 slider 的时间（用户拖拽的时间）
+            
             updateTimeLabels(targetTime);
             
-            // 然后加载数据（数据可能来自稍微不同的时间戳，但标签保持显示 slider 时间）
-            loadDataAtTime(targetTime, false); // false 表示不再更新时间标签
+            
+            loadDataAtTime(targetTime, false); 
         } else if (playbackData != null) {
             System.out.println("[PLAYBACK] Using fallback logic with playbackData");
             // Fallback to old logic for compatibility
@@ -1542,7 +1542,7 @@ public class PlaybackPanel extends VBox {
     }
     
     private void loadDataAtTime(long timestamp) {
-        loadDataAtTime(timestamp, true); // 默认更新时间标签
+        loadDataAtTime(timestamp, true); 
     }
     
     private void loadDataAtTime(long timestamp, boolean updateTimeLabel) {
@@ -1556,7 +1556,7 @@ public class PlaybackPanel extends VBox {
         }
         
         try {
-            // 智能對齊策略：當topo timestamp第一次超過flow第一個timestamp時開始對齊
+            
             AlignedData alignedData = getAlignedDataAtTime(timestamp);
             
             System.out.println("[PLAYBACK] Using smart alignment strategy");
@@ -1598,11 +1598,11 @@ public class PlaybackPanel extends VBox {
         }
     }
     
-    // 智能對齊策略：當topo timestamp第一次超過flow第一個timestamp時開始對齊
+    
     private AlignedData getAlignedDataAtTime(long timestamp) {
         System.out.println("[PLAYBACK] getAlignedDataAtTime called with timestamp: " + timestamp);
         
-        // 獲取索引信息（不載入實際數據）
+        
         List<NdjsonIndexUtil.IndexEntry> topoIndexEntries = dataReader.getAllTopologyIndexEntries();
         List<NdjsonIndexUtil.IndexEntry> flowIndexEntries = dataReader.getAllFlowIndexEntries();
         
@@ -1618,7 +1618,7 @@ public class PlaybackPanel extends VBox {
             return new AlignedData(null, null, -1, -1);
         }
         
-        // 找到flow數據的第一個timestamp
+        
         long firstFlowTimestamp = Long.MAX_VALUE;
         for (NdjsonIndexUtil.IndexEntry entry : flowIndexEntries) {
             if (entry.timestamp < firstFlowTimestamp) {
@@ -1628,7 +1628,7 @@ public class PlaybackPanel extends VBox {
         
         System.out.println("[PLAYBACK] First flow timestamp: " + firstFlowTimestamp);
         
-        // 找到topo timestamp第一次超過flow第一個timestamp的索引
+        
         int alignmentStartIndex = -1;
         for (int i = 0; i < topoIndexEntries.size(); i++) {
             if (topoIndexEntries.get(i).timestamp >= firstFlowTimestamp) {
@@ -1644,11 +1644,11 @@ public class PlaybackPanel extends VBox {
         
         System.out.println("[PLAYBACK] Alignment starts at topology index: " + alignmentStartIndex);
         
-        // 計算目標時間對應的索引
+        
         int targetTopoIndex = alignmentStartIndex;
         int targetFlowIndex = 0;
         
-        // 找到最接近目標時間的topology索引
+        
         for (int i = alignmentStartIndex; i < topoIndexEntries.size(); i++) {
             if (topoIndexEntries.get(i).timestamp <= timestamp) {
                 targetTopoIndex = i;
@@ -1657,24 +1657,24 @@ public class PlaybackPanel extends VBox {
             }
         }
         
-        // 計算對應的flow索引（從對齊點開始的相對位置）
+        
         int relativePosition = targetTopoIndex - alignmentStartIndex;
         targetFlowIndex = Math.min(relativePosition, flowIndexEntries.size() - 1);
         
         System.out.println("[PLAYBACK] Target indices - topo: " + targetTopoIndex + ", flow: " + targetFlowIndex);
         
-        // 現在才載入實際的數據
+        
         PlaybackDataReader.TopologySnapshot topoSnapshot = null;
         List<PlaybackDataReader.FlowSnapshot> flowSnapshots = new ArrayList<>();
         
         try {
-            // 載入對應的topology數據
+            
             if (targetTopoIndex < topoIndexEntries.size()) {
                 long topoTimestamp = topoIndexEntries.get(targetTopoIndex).timestamp;
                 topoSnapshot = dataReader.getTopologyAt(topoTimestamp);
             }
             
-            // 載入對應的flow數據
+            
             if (targetFlowIndex < flowIndexEntries.size()) {
                 long flowTimestamp = flowIndexEntries.get(targetFlowIndex).timestamp;
                 System.out.println("[PLAYBACK] Loading flow data at timestamp: " + flowTimestamp);
@@ -1813,7 +1813,7 @@ public class PlaybackPanel extends VBox {
         System.out.println("[PLAYBACK] links.size() = " + links.size());
         assignFlowsToLinks(flows, links);
         
-        // 验证分配结果
+        
         int linksWithFlowsCount = 0;
         for (Link link : links) {
             if (link.flow_set != null && !link.flow_set.isEmpty()) {
@@ -1860,7 +1860,7 @@ public class PlaybackPanel extends VBox {
     private void updateTimeLabels(long timestamp) {
         if (currentTimeLabel != null) {
             String timeText = formatTimestamp(timestamp);
-            // 如果暂停中，添加重播提示
+            
             if (!isPlaying) {
                 timeText += " (Replay the flow packet traveling in this second)";
                 currentTimeLabel.setStyle("-fx-text-fill: #f39c12; -fx-font-weight: bold;");
@@ -1873,9 +1873,9 @@ public class PlaybackPanel extends VBox {
         // Progress calculation removed - no longer using progressLabel
     }
     
-    /**
-     * 更新当前时间标签（根据滑动条位置计算时间）
-     */
+    
+
+
     private void updateCurrentTimeLabel() {
         if (timeRange != null && timelineSlider != null && currentTimeLabel != null) {
             double sliderSeconds = timelineSlider.getValue();
@@ -1884,9 +1884,9 @@ public class PlaybackPanel extends VBox {
         }
     }
     
-    /**
-     * 初始化跳转时间下拉选单的值（设置为指定的时间戳）
-     */
+    
+
+
     private void initializeJumpToTimeValues(long timestamp) {
         try {
             java.util.Calendar calendar = java.util.Calendar.getInstance();
@@ -1926,12 +1926,12 @@ public class PlaybackPanel extends VBox {
         }
     }
     
-    /**
-     * 跳转到用户选择的时间
-     */
+    
+
+
     private void jumpToSelectedTime() {
         try {
-            // 获取用户选择的时间
+            
             Integer year = jumpYearCombo.getValue();
             Integer month = jumpMonthCombo.getValue();
             Integer day = jumpDayCombo.getValue();
@@ -1939,14 +1939,14 @@ public class PlaybackPanel extends VBox {
             Integer minute = jumpMinuteCombo.getValue();
             Integer second = jumpSecondCombo.getValue();
             
-            // 检查所有值是否都已选择
+            
             if (year == null || month == null || day == null || 
                 hour == null || minute == null || second == null) {
                 System.err.println("[PLAYBACK] Jump to time: Not all values are selected");
                 return;
             }
             
-            // 构造时间戳
+            
             java.util.Calendar calendar = java.util.Calendar.getInstance();
             calendar.set(year, month - 1, day, hour, minute, second); // month is 0-based in Calendar
             calendar.set(java.util.Calendar.MILLISECOND, 0);
@@ -1955,7 +1955,7 @@ public class PlaybackPanel extends VBox {
             System.out.println("[PLAYBACK] Jump to time: " + year + "-" + month + "-" + day + " " + 
                              hour + ":" + minute + ":" + second + " (" + targetTimestamp + "ms)");
             
-            // 检查目标时间是否在有效范围内
+            
             if (timeRange != null) {
                 if (targetTimestamp < timeRange.startTime) {
                     System.err.println("[PLAYBACK] Jump to time: Target time is before start time");
@@ -1966,7 +1966,7 @@ public class PlaybackPanel extends VBox {
                 }
             }
             
-            // 如果正在播放，先暂停
+            
             if (isPlaying) {
                 isPlaying = false;
                 playPauseButton.setText("▶");
@@ -1975,11 +1975,11 @@ public class PlaybackPanel extends VBox {
                 notifyPlaybackStateChanged();
             }
             
-            // 计算对应的 slider 值（秒数）
+            
             if (timeRange != null && timelineSlider != null) {
                 double secondsFromStart = (targetTimestamp - timeRange.startTime) / 1000.0;
                 
-                // 设置标志，表示这是程序化更新
+                
                 isUpdatingSliderProgrammatically = true;
                 try {
                     timelineSlider.setValue(secondsFromStart);
@@ -1987,7 +1987,7 @@ public class PlaybackPanel extends VBox {
                     isUpdatingSliderProgrammatically = false;
                 }
                 
-                // 加载对应时间的数据
+                
                 loadDataAtTime(targetTimestamp);
                 
                 System.out.println("[PLAYBACK] Jumped to time: " + formatTimestamp(targetTimestamp) + 
@@ -2077,7 +2077,7 @@ public class PlaybackPanel extends VBox {
             }
         }
         
-        // 调试：显示前 3 个 flows 的信息
+        
         System.out.println("[PLAYBACK] Sample flows (first 3):");
         for (int i = 0; i < Math.min(3, flows.size()); i++) {
             Flow flow = flows.get(i);
@@ -2088,7 +2088,7 @@ public class PlaybackPanel extends VBox {
             System.out.println("[PLAYBACK]     rate: " + flow.estimatedFlowSendingRateBpsInTheLastSec);
         }
         
-        // 调试：显示前 3 个 links 的信息
+        
         System.out.println("[PLAYBACK] Sample links (first 3):");
         for (int i = 0; i < Math.min(3, links.size()); i++) {
             Link link = links.get(i);
@@ -2183,8 +2183,8 @@ public class PlaybackPanel extends VBox {
         int linksWithFlows = (int) links.stream().filter(l -> l.flow_set != null && !l.flow_set.isEmpty()).count();
         System.out.println("[PLAYBACK] Flow assignment complete. Links with flows: " + linksWithFlows + "/" + links.size());
         
-        // 备用方案：如果没有任何 flow 被分配（可能是因为缺少 pathNodes），
-        // 尝试直接将 flows 分配到它们的源-目标链路
+        
+        
         if (linksWithFlows == 0 && !flows.isEmpty()) {
             System.out.println("[PLAYBACK] WARNING: No flows assigned via pathNodes, trying direct assignment...");
             
@@ -2196,7 +2196,7 @@ public class PlaybackPanel extends VBox {
             for (Flow flow : topDirectFlows) {
                 boolean assigned = false;
                 
-                // 尝试找到从 srcIp 到 dstIp 的直接链路
+                
                 for (Link link : links) {
                     if ((link.source.equals(flow.srcIp) && link.target.equals(flow.dstIp)) ||
                         (link.source.equals(flow.dstIp) && link.target.equals(flow.srcIp))) {
@@ -2263,12 +2263,12 @@ public class PlaybackPanel extends VBox {
         setVisible(true);
     }
     
-    // 獲取播放狀態
+    
     public boolean isPlaying() {
         return isPlaying;
     }
     
-    // 通知播放狀態改變
+    
     private void notifyPlaybackStateChanged() {
         System.out.println("[DEBUG] notifyPlaybackStateChanged called, isPlaying: " + isPlaying);
         if (mainApp != null) {

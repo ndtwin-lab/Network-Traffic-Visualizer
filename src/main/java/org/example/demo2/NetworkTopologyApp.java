@@ -48,7 +48,7 @@ public class NetworkTopologyApp extends Application {
     // New member variables to manage API client and executor
     private NDTApiClient apiClient;
     private ScheduledExecutorService executor;
-    private int lastNodeCount = 0; // Record the previous node count
+    private volatile int lastNodeCount = 0; // Record the previous node count (volatile for thread safety)
     private volatile boolean isPlaybackMode = false; // Flag to control API updates
     
     // Playback panel
@@ -57,6 +57,7 @@ public class NetworkTopologyApp extends Application {
     private VBox mainContent;
     private BorderPane root;
     private SideBar sideBar;
+    private StackPane centerPane; // Store centerPane reference for dark mode updates
     
     // Loading overlay components
     private VBox loadingOverlay;
@@ -95,7 +96,7 @@ public class NetworkTopologyApp extends Application {
         
         for (int i = 0; i < flows.size(); i++) {
             Flow flow = flows.get(i);
-            // 使用 TopologyCanvas 的統一顏色邏輯（hash five-tuple + Color specification）
+            
             Color flowColor = topologyCanvas.getColorForFlow(flows.get(i));
             Circle ball = new Circle(13, flowColor);
             ball.setStroke(Color.BLACK);
@@ -122,7 +123,7 @@ public class NetworkTopologyApp extends Application {
         // Set SideBar reference in TopologyCanvas (for Top-K button updates)
         topologyCanvas.setSideBar(sideBar);
         
-        // 設置 SideBar 的主窗口引用（用於設置子窗口 owner）
+        
         sideBar.setPrimaryStage(primaryStage);
         
         // Create PlaybackPanel
@@ -149,8 +150,11 @@ public class NetworkTopologyApp extends Application {
         root.setPadding(new Insets(0)); // No margins
         
         // Create StackPane to overlay image and canvas
-        StackPane centerPane = new StackPane();
-        centerPane.setStyle("-fx-background-color: white; -fx-border-width: 0; -fx-padding: 0;");
+        this.centerPane = new StackPane();
+        // Initial background color will be set based on dark mode state
+        // Check if topologyCanvas already has dark mode set
+        boolean isDarkMode = topologyCanvas != null && topologyCanvas.darkMode;
+        centerPane.setStyle(isDarkMode ? "-fx-background-color: #23272e; -fx-border-width: 0; -fx-padding: 0;" : "-fx-background-color: white; -fx-border-width: 0; -fx-padding: 0;");
         
         // Add TopologyCanvas
         centerPane.getChildren().add(topologyCanvas);
@@ -195,6 +199,13 @@ public class NetworkTopologyApp extends Application {
         // Initially bind height without PlaybackPanel
         topologyCanvas.heightProperty().bind(root.heightProperty());
         
+        // Set callback to update centerPane background color when dark mode changes
+        topologyCanvas.setDarkModeCallback(dark -> {
+            if (centerPane != null) {
+                centerPane.setStyle(dark ? "-fx-background-color: #23272e; -fx-border-width: 0; -fx-padding: 0;" : "-fx-background-color: white; -fx-border-width: 0; -fx-padding: 0;");
+            }
+        });
+        
         // Center the loading overlay
         StackPane.setAlignment(loadingOverlay, Pos.CENTER);
 
@@ -210,7 +221,7 @@ public class NetworkTopologyApp extends Application {
 
         // Create scene
         Scene scene = new Scene(anchorPane, 1400, 900);
-        primaryStage.setTitle("NDTwin traffic animation GUI");
+        primaryStage.setTitle("Network Traffic Visualizer");
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
 
@@ -227,7 +238,7 @@ public class NetworkTopologyApp extends Application {
             // saveNodePositions(nodes); // Removed calls related to node_positions.json
             saveSettings(topologyCanvas.getFlowMoveSpeed());
             
-            // 關閉所有子窗口（方案一：確保所有子窗口都關閉）
+            
             if (sideBar != null) {
                 sideBar.closeAllDialogs();
             }
@@ -269,7 +280,7 @@ public class NetworkTopologyApp extends Application {
             System.out.println("[INFO] Using NDT_API_URL from environment: " + apiUrl);
         }
         this.apiClient = new NDTApiClient(apiUrl);
-        // 使用多執行緒執行器，充分利用多核心 CPU
+        
         int threadPoolSize = Math.max(4, Runtime.getRuntime().availableProcessors() / 2);
         this.executor = Executors.newScheduledThreadPool(threadPoolSize);
         executor.scheduleAtFixedRate(() -> {
@@ -278,7 +289,7 @@ public class NetworkTopologyApp extends Application {
                 return;
             }
             
-            // 並行執行所有 API 請求，充分利用多核心
+            
             java.util.concurrent.CompletableFuture<GraphData> graphDataFuture = 
                 CompletableFuture.supplyAsync(() -> apiClient.getGraphData(), executor);
             java.util.concurrent.CompletableFuture<DetectedFlowData[]> detectedFlowsFuture = 
@@ -288,7 +299,7 @@ public class NetworkTopologyApp extends Application {
             java.util.concurrent.CompletableFuture<Map<String, Integer>> memoryUtilizationFuture = 
                 CompletableFuture.supplyAsync(() -> apiClient.getMemoryUtilization(), executor);
             
-            // 等待所有 API 請求完成
+            
             GraphData graphData = graphDataFuture.join();
             DetectedFlowData[] detectedFlows = detectedFlowsFuture.join();
             Map<String, Integer> cpuUtilization = cpuUtilizationFuture.join();
@@ -316,9 +327,9 @@ public class NetworkTopologyApp extends Application {
                 // Then convert links with detected flows for complete path info in flow_set
                 List<Link> apiLinks = convertGraphLinks(graphData.edges, apiNodes, apiFlows);
                 
-                // ✅ RESTORED: 使用detected_flow.path來填充link.flow_set
-                // 理由：edge.flow_set不一定正確或完整，detected_flow.path才是正確的路徑信息
-                // 這樣可以確保flow顯示在正確的路徑上
+                
+                
+                
                 assignFlowsToLinks(apiFlows, apiLinks, apiNodes);
                 
                 // New: Update node utilization information
@@ -339,7 +350,7 @@ public class NetworkTopologyApp extends Application {
                 }
                 
                 Platform.runLater(() -> {
-                    // Double-check we're still in real-time mode (防止快速切換造成的競態條件)
+                    
                     if (isPlaybackMode) {
                         System.out.println("[DEBUG] Skipping API update - switched to playback mode");
                         return;
@@ -406,7 +417,7 @@ public class NetworkTopologyApp extends Application {
     
     // Read node position file and auto-scale center
     private Map<String, int[]> loadNodePositions() {
-        // 根据当前模式选择不同的位置文件
+        
         String positionFile = isPlaybackMode ? NODE_POSITIONS_PLAYBACK : NODE_POSITIONS_REALTIME;
         return loadNodePositions(positionFile);
     }
@@ -554,27 +565,6 @@ public class NetworkTopologyApp extends Application {
         int b4 = (int) (intIp & 0xFF);           // Fourth byte (least significant)
         
         return String.format("%d.%d.%d.%d", b1, b2, b3, b4);
-    }
-    
-    // New: Convert standard IP address to little-endian integer
-    private long convertIpToLittleEndian(String ip) {
-        String[] parts = ip.split("\\.");
-        if (parts.length != 4) {
-            throw new IllegalArgumentException("Invalid IP address format: " + ip);
-        }
-        
-        int b1 = Integer.parseInt(parts[0]);  // First part (192)
-        int b2 = Integer.parseInt(parts[1]);  // Second part (168)
-        int b3 = Integer.parseInt(parts[2]);  // Third part (123)
-        int b4 = Integer.parseInt(parts[3]);  // Fourth part (11)
-        
-        // Convert to little-endian format (bytes in reverse order)
-        // Example: 192.168.1.103 -> 0xC0 0xA8 0x01 0x67 -> 0x6701A8C0
-        // Use & 0xFFL to ensure unsigned conversion before bit shifting
-        return ((long) b1 & 0xFFL) |           // b1 in lowest position
-               (((long) b2 & 0xFFL) << 8) |    // b2 in second position
-               (((long) b3 & 0xFFL) << 16) |   // b3 in third position
-               (((long) b4 & 0xFFL) << 24);    // b4 in highest position
     }
     
     /**
@@ -865,7 +855,7 @@ public class NetworkTopologyApp extends Application {
                                    double canvasWidth, double canvasHeight) {
         int layerSpacing = 120;
         int startY = 80;
-        final int GRID_SIZE = 15; // 對齊網格大小
+        final int GRID_SIZE = 15; 
 
         // Core - center layout
         if (!coreNodes.isEmpty()) {
@@ -875,7 +865,7 @@ public class NetworkTopologyApp extends Application {
             for (int i = 0; i < coreNodes.size(); i++) {
                 coreNodes.get(i).x = (int) (startX + i * spacing);
                 coreNodes.get(i).y = startY;
-                // 網格吸附
+                
                 coreNodes.get(i).x = Math.round(coreNodes.get(i).x / (float)GRID_SIZE) * GRID_SIZE;
                 coreNodes.get(i).y = Math.round(coreNodes.get(i).y / (float)GRID_SIZE) * GRID_SIZE;
             }
@@ -890,7 +880,7 @@ public class NetworkTopologyApp extends Application {
             for (int i = 0; i < aggregationNodes.size(); i++) {
                 aggregationNodes.get(i).x = (int) (startX + i * spacing);
                 aggregationNodes.get(i).y = aggY;
-                // 網格吸附
+                
                 aggregationNodes.get(i).x = Math.round(aggregationNodes.get(i).x / (float)GRID_SIZE) * GRID_SIZE;
                 aggregationNodes.get(i).y = Math.round(aggregationNodes.get(i).y / (float)GRID_SIZE) * GRID_SIZE;
             }
@@ -905,7 +895,7 @@ public class NetworkTopologyApp extends Application {
             for (int i = 0; i < edgeNodes.size(); i++) {
                 edgeNodes.get(i).x = (int) (startX + i * spacing);
                 edgeNodes.get(i).y = edgeY;
-                // 網格吸附
+                
                 edgeNodes.get(i).x = Math.round(edgeNodes.get(i).x / (float)GRID_SIZE) * GRID_SIZE;
                 edgeNodes.get(i).y = Math.round(edgeNodes.get(i).y / (float)GRID_SIZE) * GRID_SIZE;
             }
@@ -914,25 +904,25 @@ public class NetworkTopologyApp extends Application {
         // Host - single row horizontal layout (all hosts in one line)
         int hostY = edgeY + layerSpacing;
         if (!hostNodes.isEmpty()) {
-            // 所有 host 節點在同一層水平排列，不分組
-            // 使用更大的寬度比例，並設定最小間距，讓節點分開一點
+            
+            
             double totalWidth = canvasWidth * 0.95; // Use 95% of canvas width (increased from 0.8)
-            double minSpacing = 25; // 最小間距 25 像素，讓節點分開一點
+            double minSpacing = 25; 
             double spacing;
             if (hostNodes.size() == 1) {
                 spacing = 0; // Single node doesn't need spacing
             } else {
                 double calculatedSpacing = totalWidth / (hostNodes.size() - 1);
-                spacing = Math.max(calculatedSpacing, minSpacing); // 使用計算間距和最小間距的較大值
+                spacing = Math.max(calculatedSpacing, minSpacing); 
             }
-            // 如果使用最小間距，重新計算總寬度和起始位置以保持置中
+            
             double actualTotalWidth = spacing * (hostNodes.size() - 1);
             double startX = (canvasWidth - actualTotalWidth) / 2; // Center start position
             
             for (int i = 0; i < hostNodes.size(); i++) {
                 hostNodes.get(i).x = (int) (startX + i * spacing);
-                hostNodes.get(i).y = hostY; // 所有 host 使用相同的 Y 位置
-                // 網格吸附
+                hostNodes.get(i).y = hostY; 
+                
                 hostNodes.get(i).x = Math.round(hostNodes.get(i).x / (float)GRID_SIZE) * GRID_SIZE;
                 hostNodes.get(i).y = Math.round(hostNodes.get(i).y / (float)GRID_SIZE) * GRID_SIZE;
             }
@@ -1088,7 +1078,7 @@ public class NetworkTopologyApp extends Application {
                             
                             System.out.println("[DEBUG] Created link: " + source + " -> " + target);
                         } else {
-                            System.out.println("[DEBUG] 無法找到節點連接: src_ip=" + srcIp + ", dst_ip=" + dstIp);
+                    System.out.println("[DEBUG] Unable to find node connection: src_ip=" + srcIp + ", dst_ip=" + dstIp);
                         }
                     }
                 }
@@ -1118,49 +1108,6 @@ public class NetworkTopologyApp extends Application {
         return links;
     }
     
-    /**
-     * Find node IP address by DPID
-     * Used to convert DPID in path nodes to IP addresses
-     */
-    private String findNodeIpByDpid(long dpid, List<Node> nodes) {
-        System.out.println("[DPID_LOOKUP] Searching for DPID: " + dpid + " (0x" + Long.toHexString(dpid) + ")");
-        
-        int switchCount = 0;
-        for (Node node : nodes) {
-            if (node.dpid != 0) {
-                switchCount++;
-                if (node.dpid == dpid) {
-                    System.out.println("[DPID_LOOKUP] ✅ FOUND! Node: " + node.name + 
-                                     " (dpid=" + node.dpid + ", ip=" + node.ip + ")");
-                    // Return the primary IP of this node
-                    if (node.ip != null && !node.ip.isEmpty()) {
-                        return node.ip;
-                    }
-                    // Fallback to first IP in ips list
-                    if (node.ips != null && !node.ips.isEmpty()) {
-                        return node.ips.get(0);
-                    }
-                }
-            }
-        }
-        
-        System.err.println("[DPID_LOOKUP] ❌ NOT FOUND! DPID " + dpid + " not in topology");
-        System.err.println("[DPID_LOOKUP] Searched " + switchCount + " switches in topology");
-        
-        // Show first few switches for debugging
-        System.err.println("[DPID_LOOKUP] Sample switches in topology:");
-        int count = 0;
-        for (Node node : nodes) {
-            if (node.dpid != 0 && count < 5) {
-                System.err.println("[DPID_LOOKUP]   - " + node.name + ": dpid=" + node.dpid + 
-                                 " (0x" + Long.toHexString(node.dpid) + ")");
-                count++;
-            }
-        }
-        
-        return null;
-    }
-
     // Convert API DetectedFlowData to GUI Flow
     private List<Flow> convertDetectedFlows(DetectedFlowData[] apiFlows, List<Node> nodes) {
         List<Flow> flows = new ArrayList<>();
@@ -1171,12 +1118,12 @@ public class NetworkTopologyApp extends Application {
             return flows;
         }
         
-        // ✅ 優化：預先建立 DPID → IP 的 HashMap，避免重複線性查找
-        // 這將 O(n) 查找降為 O(1)，大幅提升性能（特別是當 flows 和 nodes 數量很大時）
+        
+        
         Map<Long, String> dpidToIpMap = new HashMap<>();
         for (Node node : nodes) {
             if (node.dpid != 0) {
-                // 優先使用 node.ip，如果為空則使用 node.ips.get(0)
+                
                 String ip = null;
                 if (node.ip != null && !node.ip.isEmpty()) {
                     ip = node.ip;
@@ -1211,22 +1158,22 @@ public class NetworkTopologyApp extends Application {
                     
                     String nodeIp = null;
                     
-                    // ---- Unified DPID / IP 判斷邏輯 ----
-                    // 1. 先嘗試當作 DPID：如果 pn.node 剛好等於拓樸裡某個 node.dpid，
-                    //    不論它是大數字（實體 testbed）還是小數字（Mininet），都優先視為 switch DPID。
-                    // ✅ 優化：使用預先建立的 HashMap 進行 O(1) 查找，而不是 O(n) 線性查找
+                    
+                    
+                    
+                    
                     String dpidIp = dpidToIpMap.get(pn.node);
                     if (dpidIp != null) {
                         System.out.println("[DEBUG] Path node matched DPID in topology, treat as SWITCH. dpid=" 
                                            + pn.node + " (0x" + Long.toHexString(pn.node) + "), ip=" + dpidIp);
                         nodeIp = dpidIp;
                     } else if (pn.node > 0xFFFFFFFFL) {
-                        // 2. 若大於 32-bit 範圍，而且沒在拓樸中找到對應 dpid，仍當作 DPID 處理（保留原有邏輯）
+                        
                         System.out.println("[DEBUG] Path node is large value (>32-bit) but not found in DPID table, treat as SWITCH without IP mapping: " 
                                            + pn.node + " (0x" + Long.toHexString(pn.node) + ")");
-                        // 此時 nodeIp 仍為 null，後面會打印錯誤並略過這個節點
+                        
                     } else {
-                        // 3. 其他情況才當作 host IP（32-bit little-endian）處理
+                        
                         System.out.println("[DEBUG] Path node is treated as HOST IP (32-bit), converting...");
                         nodeIp = convertLittleEndianToIp(pn.node);
                         System.out.println("[DEBUG] Converted IP: " + nodeIp);
@@ -1319,7 +1266,7 @@ public class NetworkTopologyApp extends Application {
         
         // Update the topology canvas with playback data
         Platform.runLater(() -> {
-            // Double-check we're still in playback mode (防止快速切換造成的競態條件)
+            
             if (!isPlaybackMode) {
                 System.out.println("[PLAYBACK] Skipping playback update - switched to real-time mode");
                 return;
@@ -1340,14 +1287,14 @@ public class NetworkTopologyApp extends Application {
         System.out.println("  Links: " + (links != null ? links.size() : 0));
         System.out.println("  Flows: " + (flows != null ? flows.size() : 0));
         
-        // 应用 playback 模式的节点布局
+        
         if (nodes != null && !nodes.isEmpty()) {
             applyPlaybackNodeLayout(nodes, links);
         }
         
         // Update the topology canvas directly
         Platform.runLater(() -> {
-            // Double-check we're still in playback mode (防止快速切換造成的競態條件)
+            
             if (!isPlaybackMode) {
                 System.out.println("[PLAYBACK] Skipping playback update - switched to real-time mode");
                 return;
@@ -1361,14 +1308,14 @@ public class NetworkTopologyApp extends Application {
         });
     }
     
-    /**
-     * 为 playback 模式应用节点布局
-     * 使用和 real-time 相同的布局方法
-     */
+    
+
+
+
     private void applyPlaybackNodeLayout(List<Node> nodes, List<Link> links) {
         System.out.println("[PLAYBACK] Applying node layout for " + nodes.size() + " nodes");
         
-        // 尝试加载 playback 专用的节点位置
+        
         Map<String, int[]> savedPositions = loadNodePositions(NODE_POSITIONS_PLAYBACK);
         
         // Check if ALL nodes can match saved positions (complete match required)
@@ -1387,7 +1334,7 @@ public class NetworkTopologyApp extends Application {
         }
         
         if (savedPositions != null && !savedPositions.isEmpty() && allNodesMatched) {
-            // 应用已保存的位置 (only when complete match)
+            
             System.out.println("[PLAYBACK] Using saved positions (complete match)");
             for (Node node : nodes) {
                 int[] pos = savedPositions.get(node.ip);
@@ -1397,7 +1344,7 @@ public class NetworkTopologyApp extends Application {
                 }
             }
         } else {
-            // 没有保存的位置或不完全匹配，使用自动布局
+            
             if (savedPositions != null && !savedPositions.isEmpty() && !allNodesMatched) {
                 System.out.println("[PLAYBACK] Incomplete match detected, switching to Fat-Tree auto-layout");
             } else {
@@ -1407,18 +1354,18 @@ public class NetworkTopologyApp extends Application {
         }
     }
     
-    /**
-     * Playback 自动布局 - 使用和 real-time 相同的 Fat-Tree 布局
-     */
+    
+
+
     private void applyPlaybackAutoLayout(List<Node> nodes, double canvasWidth, double canvasHeight) {
-        // 分层：和 real-time 使用相同的逻辑
+        
         List<Node> coreNodes = new ArrayList<>();
         List<Node> aggregationNodes = new ArrayList<>();
         List<Node> edgeNodes = new ArrayList<>();
         List<Node> hostNodes = new ArrayList<>();
         
         for (Node node : nodes) {
-            // 根据 layer 属性分类
+            
             if ("host".equals(node.layer) || "2".equals(node.type) || "1".equals(node.type)) {
                 hostNodes.add(node);
                 node.layer = "host";
@@ -1432,9 +1379,9 @@ public class NetworkTopologyApp extends Application {
                 edgeNodes.add(node);
                 node.layer = "edge";
             } else {
-                // 根据名称推断（和 real-time 相同的逻辑）
+                
                 if (node.name.startsWith("s") || node.name.startsWith("S")) {
-                    // 提取数字来判断层级
+                    
                     try {
                         String numStr = node.name.replaceAll("[^0-9]", "");
                         if (!numStr.isEmpty()) {
@@ -1470,7 +1417,7 @@ public class NetworkTopologyApp extends Application {
         System.out.println("[PLAYBACK] Node classification: Core=" + coreNodes.size() + 
                          ", Agg=" + aggregationNodes.size() + ", Edge=" + edgeNodes.size() + ", Host=" + hostNodes.size());
         
-        // 使用和 real-time 相同的 Fat-Tree 布局方法
+        
         applyFatTreeLayout(coreNodes, aggregationNodes, edgeNodes, hostNodes, canvasWidth, canvasHeight);
     }
     
@@ -1498,7 +1445,7 @@ public class NetworkTopologyApp extends Application {
         List<Link> links = new ArrayList<>();
         
         if (frame.edges != null) {
-            for (PlaybackData.EdgeData edgeData : frame.edges) {
+            for (int i = 0; i < frame.edges.size(); i++) {
                 // Create a simple link representation
                 // In a real implementation, you would map the edge data more accurately
                 Link link = new Link("", "", new ArrayList<>(), new ArrayList<>(), 
@@ -1516,7 +1463,7 @@ public class NetworkTopologyApp extends Application {
         List<Flow> flows = new ArrayList<>();
         
         if (frame.flow != null) {
-            for (PlaybackData.FlowData flowData : frame.flow) {
+            for (int i = 0; i < frame.flow.size(); i++) {
                 // Create a simple flow representation
                 // In a real implementation, you would map the flow data more accurately
                 List<String> pathNodes = new ArrayList<>();
@@ -1540,23 +1487,23 @@ public class NetworkTopologyApp extends Application {
                 // Hide PlaybackPanel - return to real-time mode
                 System.out.println("[MODE_SWITCH] Starting switch to real-time mode...");
                 
-                // 1. 首先停止 playback 並設置模式標志
+                
                 try {
                     if (playbackPanel != null) {
                         playbackPanel.stopPlaybackExternal();
                     }
                 } catch (Exception ignore) {}
                 
-                // 2. 立即恢復 API 更新（設置 isPlaybackMode = false）
+                
                 resumeApiUpdates();
                 System.out.println("[MODE_SWITCH] API updates resumed");
                 
-                // 3. 設置 Canvas 為 real-time 模式
+                
                 topologyCanvas.setPlaybackMode(false);
                 topologyCanvas.setNodePositionFile(NODE_POSITIONS_REALTIME);
                 System.out.println("[MODE_SWITCH] Canvas switched to real-time mode");
                 
-                // 4. 更新 UI 布局
+                
                 mainContent.getChildren().remove(playbackPanel);
                 topologyCanvas.heightProperty().unbind();
                 topologyCanvas.heightProperty().bind(root.heightProperty());
@@ -1567,19 +1514,19 @@ public class NetworkTopologyApp extends Application {
                 // Show PlaybackPanel - enter playback mode
                 System.out.println("[MODE_SWITCH] Starting switch to playback mode...");
                 
-                // 1. 首先暫停 API 更新（設置 isPlaybackMode = true）
+                
                 pauseApiUpdates();
                 System.out.println("[MODE_SWITCH] API updates paused");
                 
-                // 2. 設置 Canvas 為 playback 模式
+                
                 topologyCanvas.setPlaybackMode(true);
                 topologyCanvas.setNodePositionFile(NODE_POSITIONS_PLAYBACK);
                 System.out.println("[MODE_SWITCH] Canvas switched to playback mode");
                 
-                // 3. 清空拓撲
+                
                 clearTopologyForPlayback();
                 
-                // 4. 更新 UI 布局
+                
                 mainContent.getChildren().add(0, playbackPanel);
                 playbackPanel.show();
                 topologyCanvas.heightProperty().unbind();
@@ -1587,7 +1534,7 @@ public class NetworkTopologyApp extends Application {
                     root.heightProperty().subtract(playbackPanel.heightProperty())
                 );
                 
-                // 5. 確保正確的顯示模式（Flow Only mode）
+                
                 topologyCanvas.setShowFlows(true);
                 topologyCanvas.setShowLinks(false);
                 
@@ -1652,14 +1599,14 @@ public class NetworkTopologyApp extends Application {
         });
     }
     
-    // 通知播放狀態改變
+    
     public void notifyPlaybackStateChanged() {
         System.out.println("[DEBUG] NetworkTopologyApp.notifyPlaybackStateChanged called");
         if (playbackPanel != null) {
             boolean isPlaying = playbackPanel.isPlaying();
             System.out.println("[DEBUG] Playback state: " + (isPlaying ? "playing" : "paused"));
             
-            // 更新 SideBar 的播放按鈕樣式
+            
             if (sideBar != null) {
                 Platform.runLater(() -> {
                     sideBar.updatePlaybackButtonStyle(isPlaying);
@@ -1695,9 +1642,9 @@ public class NetworkTopologyApp extends Application {
             }
         }
         
-        // ✅ 優化：預先建立 Link 查找索引，避免重複線性查找
-        // Key: "source->target" (方向性)，Value: Link
-        // 這將 O(n) 查找降為 O(1)，大幅提升性能（特別是當 flows 和 links 數量很大時）
+        
+        
+        
         Map<String, Link> linkMap = new HashMap<>();
         for (Link link : links) {
             String key = link.source + "->" + link.target;
@@ -1730,7 +1677,7 @@ public class NetworkTopologyApp extends Application {
                 String ipA = nodeA;
                 String ipB = nodeB;
                 
-                // ✅ 優化：使用預先建立的 HashMap 進行 O(1) 查找，而不是 O(n) 線性查找
+                
                 // Find the link between these two nodes (STRICT DIRECTIONAL - no bidirectional)
                 String linkKey = ipA + "->" + ipB;
                 Link link = linkMap.get(linkKey);

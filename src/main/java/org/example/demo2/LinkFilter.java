@@ -97,7 +97,7 @@ public class LinkFilter extends VBox {
         // Add event handling
         sourceNodeCombo.setOnAction(e -> updateFlowInfoTable());
 
-        // Select All 複選框
+        
         selectAllCheckBox = new CheckBox("Select All");
         selectAllCheckBox.setSelected(true);
         selectAllCheckBox.setOnAction(e -> toggleAllFlows());
@@ -112,22 +112,22 @@ public class LinkFilter extends VBox {
         flowInfoTable.setPrefHeight(200);
         flowInfoTable.setStyle("-fx-background-color: white; -fx-border-color: #cccccc;");
         
-        // Flow ID 列
+        
         TableColumn<FlowInfo, String> flowIdCol = new TableColumn<>("Flow ID");
         flowIdCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().flowId));
         flowIdCol.setPrefWidth(60);
         
-        // Src 列
+        
         TableColumn<FlowInfo, String> srcCol = new TableColumn<>("Src");
         srcCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().srcName));
         srcCol.setPrefWidth(80);
         
-        // Dst 列
+        
         TableColumn<FlowInfo, String> dstCol = new TableColumn<>("Dst");
         dstCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().dstName));
         dstCol.setPrefWidth(80);
         
-        // Utilization 列
+        
         TableColumn<FlowInfo, String> utilCol = new TableColumn<>("Utilization");
         utilCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().utilization));
         utilCol.setPrefWidth(80);
@@ -135,11 +135,11 @@ public class LinkFilter extends VBox {
         flowInfoTable.getColumns().addAll(flowIdCol, srcCol, dstCol, utilCol);
         flowInfoTable.setItems(flowInfoData);
 
-        // 底部的鏈路複選框容器
+        
         linkCheckBoxesContainer = new VBox(5);
         linkCheckBoxesContainer.setStyle("-fx-background-color: #f5f5f5; -fx-padding: 5; -fx-border-color: #cccccc; -fx-border-radius: 3;");
 
-        // 添加組件
+        
         getChildren().addAll(
             titleBox, 
             selectNodesLabel, 
@@ -151,12 +151,12 @@ public class LinkFilter extends VBox {
             linkCheckBoxesContainer
         );
 
-        // 初始狀態
+        
         selectAllFlows();
         updateFlowInfoTable();
     }
 
-    // 更新所有數據
+    
     public void updateData(List<Link> newLinks, List<Node> newNodes, List<Flow> newFlows) {
         this.links = newLinks;
         this.nodes = newNodes;
@@ -164,22 +164,22 @@ public class LinkFilter extends VBox {
         refreshAllOptions();
     }
 
-    // 刷新所有選項
+    
     private void refreshAllOptions() {
-        // 保存當前選擇的 source node
+        
         String currentSelection = sourceNodeCombo.getValue();
         
-        // 重新填充 node 選項
+        
         populateNodeOptions();
         
-        // 恢復之前的選擇（如果還存在）
+        
         if (currentSelection != null && sourceNodeCombo.getItems().contains(currentSelection)) {
             sourceNodeCombo.setValue(currentSelection);
         } else if (!sourceNodeCombo.getItems().isEmpty()) {
             sourceNodeCombo.setValue(sourceNodeCombo.getItems().get(0));
         }
         
-        // 更新表格
+        
         updateFlowInfoTable();
     }
     
@@ -193,7 +193,7 @@ public class LinkFilter extends VBox {
         
         sourceNodeCombo.setItems(nodeOptions);
         
-        // 設置默認選擇第一個節點
+        
         if (!nodeOptions.isEmpty()) {
             sourceNodeCombo.setValue(nodeOptions.get(0));
         }
@@ -207,15 +207,15 @@ public class LinkFilter extends VBox {
             return;
         }
         
-        // 解析選中的節點名稱
+        
         String selectedNodeName = selectedSource.split(" \\(")[0];
         
-        // 找到與選中節點相關的flows
+        
         int flowId = 1;
         for (Flow flow : flows) {
             if (flow.pathNodes == null || flow.pathNodes.size() < 2) continue;
             
-            // 檢查flow是否經過選中的節點
+            
             boolean involvesSelectedNode = false;
             String srcName = "", dstName = "";
             
@@ -237,7 +237,7 @@ public class LinkFilter extends VBox {
             }
             
             if (involvesSelectedNode) {
-                // 計算利用率
+                
                 double utilization = 0.0;
                 for (Link link : links) {
                     Node lsrc = topologyCanvas.getNodeByIp(link.source);
@@ -260,7 +260,7 @@ public class LinkFilter extends VBox {
             }
         }
         
-        // 更新底部的鏈路複選框
+        
         updateLinkCheckBoxes(selectedNodeName);
     }
 
@@ -276,13 +276,13 @@ public class LinkFilter extends VBox {
         selectAllCheckBox.setSelected(true);
     }
 
-    // 更新底部的鏈路複選框
+    
     private void updateLinkCheckBoxes(String selectedNodeName) {
-        // 清空現有的複選框
+        
         linkCheckBoxesContainer.getChildren().clear();
         linkCheckBoxes.clear();
         
-        // 找到與選中節點相關的所有鏈路
+        
         Set<String> connectedLinks = new HashSet<>();
         
         for (Link link : links) {
@@ -291,7 +291,7 @@ public class LinkFilter extends VBox {
             
             if (srcNode != null && dstNode != null) {
                 if (srcNode.name.equals(selectedNodeName) || dstNode.name.equals(selectedNodeName)) {
-                    // 標準化鏈路名稱（按字母順序）
+                    
                     String linkKey = srcNode.name.compareTo(dstNode.name) < 0 ? 
                         srcNode.name + "," + dstNode.name : 
                         dstNode.name + "," + srcNode.name;
@@ -299,7 +299,7 @@ public class LinkFilter extends VBox {
                     if (!connectedLinks.contains(linkKey)) {
                         connectedLinks.add(linkKey);
                         
-                        // 創建複選框
+                        
                         String linkText = srcNode.name.compareTo(dstNode.name) < 0 ? 
                             srcNode.name + " <-> " + dstNode.name : 
                             dstNode.name + " <-> " + srcNode.name;
@@ -309,7 +309,7 @@ public class LinkFilter extends VBox {
                         checkBox.setWrapText(true);
                         checkBox.setMaxWidth(Double.MAX_VALUE);
                         
-                        // 添加工具提示
+                        
                         String tooltipText = String.format(
                             "Link: %s ↔ %s\nBandwidth: %d bps\nStatus: %s\nUtilization: %.2f%%",
                             srcNode.name, dstNode.name, link.bandwidth, 
@@ -329,11 +329,11 @@ public class LinkFilter extends VBox {
             }
         }
         
-        // 更新全選狀態
+        
         updateSelectAllState();
     }
     
-    // 更新全選狀態
+    
     private void updateSelectAllState() {
         if (linkCheckBoxes.isEmpty()) {
             selectAllCheckBox.setIndeterminate(false);
@@ -353,13 +353,13 @@ public class LinkFilter extends VBox {
         }
     }
     
-    // 更新鏈路可見性
+    
     private void updateLinkVisibility() {
-        // TODO: 實現鏈路可見性控制邏輯
-        // 目前此方法為空，但保留以供未來實現
+        
+        
     }
 
-    // Flow 信息資料結構
+    
     private static class FlowInfo {
         String flowId;
         String srcName;
@@ -374,26 +374,26 @@ public class LinkFilter extends VBox {
         }
     }
     
-    // 顯示 Link Filter 視窗
+    
     public static void showLinkFilterDialog(TopologyCanvas topologyCanvas, List<Link> links, List<Node> nodes, List<Flow> flows) {
         if (dialog != null && dialog.isShowing()) {
             dialog.toFront();
             return;
         }
         
-        // 創建新的 LinkFilter 實例
+        
         LinkFilter linkFilter = new LinkFilter(topologyCanvas, links, nodes, flows);
         
-        // 創建視窗內容
+        
         VBox root = new VBox(10);
         root.setStyle("-fx-background-color: white; -fx-padding: 15;");
         root.setPrefWidth(400);
         root.setPrefHeight(500);
         
-        // 添加內容
+        
         root.getChildren().add(linkFilter);
         
-        // 創建 Scene 和 Stage
+        
         Scene scene = new Scene(root);
         dialog = new Stage();
         dialog.setTitle("Link Filter");
@@ -402,10 +402,10 @@ public class LinkFilter extends VBox {
         dialog.setMinWidth(400);
         dialog.setMinHeight(500);
         
-        // 設置視窗位置（居中）
+        
         dialog.centerOnScreen();
         
-        // 顯示視窗
+        
         dialog.show();
     }
 }

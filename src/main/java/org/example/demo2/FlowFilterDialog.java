@@ -37,9 +37,9 @@ public class FlowFilterDialog {
         createUI();
     }
     
-    /**
-     * 設置窗口 owner（方案一：設置 owner 為主窗口）
-     */
+    
+
+
     public void setOwner(javafx.stage.Stage owner) {
         if (dialog != null && owner != null) {
             dialog.initOwner(owner);
