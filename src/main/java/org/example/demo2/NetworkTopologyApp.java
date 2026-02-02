@@ -28,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -190,11 +191,16 @@ public class NetworkTopologyApp extends Application {
         mainContent.getChildren().add(centerPane); // Initially only add centerPane
         VBox.setVgrow(centerPane, Priority.ALWAYS);
 
+        ScrollPane sideBarScrollPane = new ScrollPane(sideBar);
+        sideBarScrollPane.setFitToWidth(true);
+        sideBarScrollPane.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
+        sideBarScrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         root.setCenter(mainContent);
-        root.setLeft(sideBar);
+        root.setLeft(sideBarScrollPane);
         BorderPane.setMargin(mainContent, new Insets(0)); // No margins
-        BorderPane.setMargin(sideBar, new Insets(0)); // No margins for sidebar
-        topologyCanvas.widthProperty().bind(root.widthProperty().subtract(sideBar.getWidth()));
+        BorderPane.setMargin(sideBarScrollPane, new Insets(0)); // No margins for sidebar
+        topologyCanvas.widthProperty().bind(root.widthProperty().subtract(sideBarScrollPane.widthProperty()));
         
         // Initially bind height without PlaybackPanel
         topologyCanvas.heightProperty().bind(root.heightProperty());

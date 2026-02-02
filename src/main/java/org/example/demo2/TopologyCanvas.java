@@ -329,6 +329,7 @@ public class TopologyCanvas extends Canvas {
         
         mousePressX = e.getX();
         mousePressY = e.getY();
+        linkInfoShownOnPress = false;
         
         
         double actualX = (e.getX() - offsetX) / scale;
@@ -397,6 +398,7 @@ public class TopologyCanvas extends Canvas {
 
         List<Link> clickedLinks = getLinksAt(actualX, actualY);
         if (!clickedLinks.isEmpty()) {
+            linkInfoShownOnPress = true;
             
             if (showFlows && !showLinks) {
                 
@@ -464,10 +466,15 @@ public class TopologyCanvas extends Canvas {
     private double mousePressX = 0;
     private double mousePressY = 0;
     private static final double CLICK_THRESHOLD = 5.0; 
+    private boolean linkInfoShownOnPress = false;
     
     private void handleMouseReleased(MouseEvent e) {
         
         if (e.getButton() != javafx.scene.input.MouseButton.PRIMARY) {
+            return;
+        }
+        if (linkInfoShownOnPress) {
+            linkInfoShownOnPress = false;
             return;
         }
         
@@ -512,7 +519,9 @@ public class TopologyCanvas extends Canvas {
             
             if (moveDistance < CLICK_THRESHOLD) {
                 
-                List<Link> clickedLinks = getLinksAt(e.getX(), e.getY());
+                double actualX = (e.getX() - offsetX) / scale;
+                double actualY = (e.getY() - offsetY) / scale;
+                List<Link> clickedLinks = getLinksAt(actualX, actualY);
                 if (!clickedLinks.isEmpty()) {
                     if (showFlows && !showLinks) {
                         // Flow Only Mode
