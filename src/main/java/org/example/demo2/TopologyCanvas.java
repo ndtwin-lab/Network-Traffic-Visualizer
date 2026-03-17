@@ -402,8 +402,12 @@ public class TopologyCanvas extends Canvas {
             
             if (showFlows && !showLinks) {
                 
-                InfoDialog dialog = new InfoDialog(this, flows);
-                dialog.showFlowSetInfo(clickedLinks);
+                if (infoDialog != null) {
+                    infoDialog.showFlowSetInfo(clickedLinks);
+                } else {
+                    infoDialog = new InfoDialog(this, flows);
+                    infoDialog.showFlowSetInfo(clickedLinks);
+                }
             } else if (!showFlows && showLinks) {
                 
                 showLinkOnlyInfo(clickedLinks);
@@ -436,17 +440,6 @@ public class TopologyCanvas extends Canvas {
             draggedNode = null;
             isRangeSelecting = false;
             isGroupDragging = false;
-        }
-    }
-    
-    private void showFlowOnlyInfo(List<Link> clickedLinks) {
-        
-        if (infoDialog != null) {
-            infoDialog.showFlowSetInfo(clickedLinks);
-        } else {
-            
-            infoDialog = new InfoDialog(this, flows);
-            infoDialog.showFlowSetInfo(clickedLinks);
         }
     }
     
@@ -524,10 +517,15 @@ public class TopologyCanvas extends Canvas {
                 List<Link> clickedLinks = getLinksAt(actualX, actualY);
                 if (!clickedLinks.isEmpty()) {
                     if (showFlows && !showLinks) {
-                        // Flow Only Mode
-                        showFlowOnlyInfo(clickedLinks);
+                        
+                        if (infoDialog != null) {
+                            infoDialog.showFlowSetInfo(clickedLinks);
+                        } else {
+                            infoDialog = new InfoDialog(this, flows);
+                            infoDialog.showFlowSetInfo(clickedLinks);
+                        }
                     } else if (showLinks) {
-                        // Link Only Mode
+                        
                         showLinkOnlyInfo(clickedLinks);
                     }
                 }

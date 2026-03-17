@@ -62,6 +62,30 @@ public class NDTApiClient {
         return null;
     }
     
+    /**
+     * Call the Top-K flow API.
+     * Example: GET {baseUrl}/ndt/get_detected_top_k_flow_data?k=50
+     */
+    public DetectedFlowData[] getDetectedTopKFlowData(int k) {
+        try {
+            // Ensure K is positive; fall back to 1 if invalid
+            int safeK = Math.max(1, k);
+            String url = String.format("%s/ndt/get_detected_top_k_flow_data?k=%d", baseUrl, safeK);
+            HttpGet request = new HttpGet(url);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String result = EntityUtils.toString(entity);
+                    return objectMapper.readValue(result, DetectedFlowData[].class);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("[API] get_detected_top_k_flow_data error: " + e.getMessage());
+        }
+        return null;
+    }
+    
 
     public java.util.Map<String, Integer> getCpuUtilization() {
         try {

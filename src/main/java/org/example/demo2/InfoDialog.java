@@ -8,6 +8,7 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,12 +38,15 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 public class InfoDialog {
     private final TopologyCanvas topologyCanvas;
     private final List<Flow> allFlows;
     private Stage dialog; // Add a Stage member variable
+    // Optional reference to main app for API-related controls
+    private NetworkTopologyApp mainApp;
     
     // Create a data class containing flow and direction information
     private static class FlowTableItem {
@@ -198,6 +202,10 @@ public class InfoDialog {
     public InfoDialog(TopologyCanvas topologyCanvas, List<Flow> allFlows) {
         this.topologyCanvas = topologyCanvas;
         this.allFlows = allFlows;
+    }
+    
+    public void setMainApp(NetworkTopologyApp mainApp) {
+        this.mainApp = mainApp;
     }
     
     private Stage createDialog() {
@@ -770,208 +778,9 @@ public class InfoDialog {
         
         return row;
     }
-
-
-            // Flow Only mode: Display all flow information (table format)
-    public void showFlowOnlyInfo(List<TopologyCanvas.FlowWithDirection> flowsWithDirection) {
-        System.out.println("[DEBUG] showFlowOnlyInfo called with " + (flowsWithDirection != null ? flowsWithDirection.size() : "null") + " flows");
-        System.out.println("[DEBUG] showFlowOnlyInfo called, flowsWithDirection=" + (flowsWithDirection != null ? flowsWithDirection.size() : "null"));
-        
-        // If dialog is null or closed, create a new one
-        if (dialog == null || !dialog.isShowing()) {
-            dialog = new Stage();
-                          dialog.initModality(Modality.NONE); // Change to non-modal dialog
-            dialog.setTitle("Flow Information - Flow Only Mode (Live)");
-            dialog.setMinWidth(1050);
-        dialog.setMinHeight(600);
-        } else {
-            // If dialog already exists and is showing, clear content and reuse
-            dialog.setTitle("Flow Information - Flow Only Mode (Live)");
-        }
-
-        VBox root = new VBox(10);
-        root.setPadding(new Insets(15));
-        root.setStyle("-fx-background-color: #f9f9f9;");
-
-        Label title = new Label("Active Flows on Selected Links:");
-        title.setFont(Font.font("Monospaced", FontWeight.BOLD, 18));
-        root.getChildren().add(title);
-
-        // Add LIVE indicator
-        Label liveLabel = new Label("LIVE");
-        liveLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
-        liveLabel.setStyle("-fx-text-fill: #ff4444; -fx-background-color: #ffeeee; -fx-padding: 2 6; -fx-border-color: #ff4444; -fx-border-width: 1; -fx-border-radius: 3;");
-        
-        // Create animation effect for LIVE indicator
-        Timeline liveAnimation = new Timeline(
-            new KeyFrame(Duration.ZERO, e -> liveLabel.setOpacity(1.0)),
-            new KeyFrame(Duration.seconds(0.5), e -> liveLabel.setOpacity(0.3)),
-            new KeyFrame(Duration.seconds(1.0), e -> liveLabel.setOpacity(1.0))
-        );
-        liveAnimation.setCycleCount(Timeline.INDEFINITE);
-        liveAnimation.play();
-        
-        // TableView
-        TableView<FlowTableItem> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setPrefWidth(1000);
-        
-        // Flow color column
-        TableColumn<FlowTableItem, FlowTableItem> flowCol = new TableColumn<>("Flow");
-        flowCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
-        flowCol.setCellFactory(column -> new TableCell<FlowTableItem, FlowTableItem>() {
-            @Override
-            protected void updateItem(FlowTableItem item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null || item.flow == null) {
-                    setGraphic(null);
-                } else {
-                    
-                    Color flowColor = topologyCanvas.getColorForFlow(item.flow);
-                    javafx.scene.shape.Rectangle colorRectangle = new javafx.scene.shape.Rectangle(16, 12, flowColor);
-                    colorRectangle.setStroke(Color.BLACK);
-                    colorRectangle.setStrokeWidth(1);
-                    setGraphic(colorRectangle);
-                }
-            }
-        });
-        flowCol.setPrefWidth(80);
-        flowCol.setMinWidth(60);
-        flowCol.setResizable(true);
-        flowCol.setVisible(true);
-
-        TableColumn<FlowTableItem, String> srcIpCol = new TableColumn<>("Src IP");
-        srcIpCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().convertedSrcIp));
-        srcIpCol.setPrefWidth(130);
-
-        TableColumn<FlowTableItem, String> dstIpCol = new TableColumn<>("Dst IP");
-        dstIpCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().convertedDstIp));
-        dstIpCol.setPrefWidth(130);
-
-        TableColumn<FlowTableItem, Number> srcPortCol = new TableColumn<>("Src Port");
-        srcPortCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().flow.srcPort));
-        srcPortCol.setPrefWidth(85);
-
-        TableColumn<FlowTableItem, Number> dstPortCol = new TableColumn<>("Dst Port");
-        dstPortCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().flow.dstPort));
-        dstPortCol.setPrefWidth(85);
-
-        TableColumn<FlowTableItem, Number> protoCol = new TableColumn<>("Protocol");
-        protoCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().flow.protocolId));
-        protoCol.setPrefWidth(85);
-
-        TableColumn<FlowTableItem, String> sendingRateCol = new TableColumn<>("Sending Rate");
-        sendingRateCol.setCellValueFactory(cellData -> new SimpleStringProperty(formatRate(cellData.getValue().flow.estimatedFlowSendingRateBpsInTheLastSec)));
-        sendingRateCol.setPrefWidth(130);
-
-        TableColumn<FlowTableItem, String> startTimeCol = new TableColumn<>("First Sample Time");
-        startTimeCol.setCellValueFactory(cellData -> new SimpleStringProperty(convertMsToTimeFormat(cellData.getValue().flow.startTimeMs)));
-        startTimeCol.setPrefWidth(130);
-
-        TableColumn<FlowTableItem, String> endTimeCol = new TableColumn<>("Latest Sample Time");
-        endTimeCol.setCellValueFactory(cellData -> new SimpleStringProperty(convertMsToTimeFormat(cellData.getValue().flow.endTimeMs)));
-        endTimeCol.setPrefWidth(130);
-
-        table.getColumns().addAll(flowCol, srcIpCol, dstIpCol, srcPortCol, dstPortCol, protoCol, sendingRateCol, startTimeCol, endTimeCol);
-        
-        // Enable sorting for all columns
-        flowCol.setSortable(true);
-        srcIpCol.setSortable(true);
-        dstIpCol.setSortable(true);
-        srcPortCol.setSortable(true);
-        dstPortCol.setSortable(true);
-        protoCol.setSortable(true);
-        sendingRateCol.setSortable(true);
-        startTimeCol.setSortable(true);
-        endTimeCol.setSortable(true);
-        
-        // Debug info: Confirm columns are added
-        System.out.println("[DEBUG] Flow Information Table Columns:");
-        for (int i = 0; i < table.getColumns().size(); i++) {
-            System.out.println("[DEBUG] Column " + i + ": " + table.getColumns().get(i).getText());
-        }
-        table.setPrefHeight(400);
-
-        // Button area
-        HBox buttonBox = new HBox(10);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        
-        // Save original flowsWithDirection for real-time updates
-        final List<TopologyCanvas.FlowWithDirection> originalFlowsWithDirection = new ArrayList<>(flowsWithDirection);
-        
-        // Add toggle state variable
-        final boolean[] showAllFlows = {false};
-        
-        // All Flow Information button - now a toggle button
-        Button toggleBtn = new Button("Show All Flows");
-        toggleBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;");
-        toggleBtn.setOnAction(e -> {
-            showAllFlows[0] = !showAllFlows[0];
-            if (showAllFlows[0]) {
-                toggleBtn.setText("Show Selected Link Flows");
-                updateAllFlowData(table, title);
-            } else {
-                toggleBtn.setText("Show All Flows");
-                updateFlowData(originalFlowsWithDirection, table, title);
-            }
-        });
-        
-        // Close button
-        Button closeBtn = new Button("Close");
-        closeBtn.setOnAction(e -> dialog.close());
-        closeBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
-        
-        // ===== New: Port Table button =====
-        Button portTableBtn = new Button("Port Table");
-        portTableBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;");
-        portTableBtn.setOnAction(e -> showPortTableDialog());
-        buttonBox.getChildren().addAll(toggleBtn, portTableBtn, closeBtn);
-        
-        root.getChildren().addAll(liveLabel, table, buttonBox);
-
-        // Create real-time update timer - update based on current mode
-        Timeline updateTimer = new Timeline(
-            new KeyFrame(Duration.seconds(1), e -> {
-                if (showAllFlows[0]) {
-                    updateAllFlowData(table, title);
-                } else {
-                    updateFlowData(originalFlowsWithDirection, table, title);
-                }
-            })
-        );
-        updateTimer.setCycleCount(Timeline.INDEFINITE);
-        updateTimer.play();
-
-                // Stop timer when dialog closes
-        dialog.setOnCloseRequest(e -> {
-            updateTimer.stop();
-            liveAnimation.stop();
-        });
-        
-        // Initial display - show flows on selected links
-        updateFlowData(originalFlowsWithDirection, table, title);
-        
-        // If dialog already exists and is showing, only update content
-        if (dialog.isShowing()) {
-            // Get existing Scene and root
-            Scene existingScene = dialog.getScene();
-            if (existingScene != null) {
-                VBox existingRoot = (VBox) existingScene.getRoot();
-                // Clear existing content and add new content
-                existingRoot.getChildren().clear();
-                existingRoot.getChildren().addAll(title, liveLabel, table, buttonBox);
-            }
-        } else {
-            // If dialog doesn't exist or is not showing, create new Scene
-            Scene scene = new Scene(root, 1050, 600);
-            dialog.setScene(scene);
-            dialog.show();
-        }
-    }
-
     private void updateFlowData(List<TopologyCanvas.FlowWithDirection> flowsWithDirection, TableView<FlowTableItem> table, Label title) {
         System.out.println("[DEBUG] updateFlowData called, flowsWithDirection=" + (flowsWithDirection != null ? flowsWithDirection.size() : "null"));
-            table.getItems().clear();
+        table.getItems().clear();
         if (flowsWithDirection == null || flowsWithDirection.isEmpty()) {
             title.setText("No Flows on Selected Links");
             return;
@@ -1032,20 +841,21 @@ public class InfoDialog {
                 title.setText("No Flows on Selected Link");
             }
         }
+        // Apply manual sorting based on current sort order (especially for Sending Rate)
+        sortFlowItemsIfNeeded(table, flowItems);
         table.getItems().addAll(flowItems);
         table.refresh();
     }
 
     private void updateAllFlowData(TableView<FlowTableItem> table, Label title) {
-            table.getItems().clear();
-        
+        table.getItems().clear();
         
         if (allFlows == null || allFlows.isEmpty()) {
             title.setText("No Flows Detected on the Network");
             return;
         }
         
-            List<FlowTableItem> allFlowItems = allFlows.stream()
+        List<FlowTableItem> allFlowItems = allFlows.stream()
                 .map(flow -> {
                     
                     String direction;
@@ -1066,11 +876,164 @@ public class InfoDialog {
                 })
                 .toList();
         
-            table.getItems().addAll(allFlowItems);
+        // Apply manual sorting based on current sort order (especially for Sending Rate)
+        sortFlowItemsIfNeeded(table, allFlowItems);
+        table.getItems().addAll(allFlowItems);
         title.setText("All Flows Detected on the Network (" + allFlowItems.size() + " flows):");
         
         
         table.refresh();
+    }
+
+    /**
+     * Manually sort FlowTableItem list according to the current TableView sort order.
+     * This ensures that even as data updates every second, the rows remain ordered
+     * correctly, especially for the numeric Sending Rate column.
+     */
+    private void sortFlowItemsIfNeeded(TableView<FlowTableItem> table, List<FlowTableItem> items) {
+        if (items == null || items.size() <= 1) {
+            return;
+        }
+        if (table.getSortOrder().isEmpty()) {
+            return;
+        }
+
+        TableColumn<FlowTableItem, ?> sortCol = table.getSortOrder().get(0);
+        TableColumn.SortType sortType = sortCol.getSortType();
+
+        // We care most about Sorting by "Sending Rate"
+        if ("Sending Rate".equals(sortCol.getText())) {
+            if (sortType == TableColumn.SortType.ASCENDING) {
+                items.sort((a, b) -> Double.compare(a.sendingRate, b.sendingRate));
+            } else if (sortType == TableColumn.SortType.DESCENDING) {
+                items.sort((a, b) -> Double.compare(b.sendingRate, a.sendingRate));
+            }
+        }
+        // For other columns，暫時沿用 TableView 預設排序（不特別處理）
+    }
+
+    // ===== API control helpers =====
+
+    /**
+     * Owner for modal API dialogs. Prefer Flow Information stage when open so macOS
+     * does not treat dialogs as application-wide fullscreen; fallback to canvas window.
+     */
+    private Window getApiDialogOwner() {
+        if (dialog != null && dialog.isShowing()) {
+            return dialog;
+        }
+        if (topologyCanvas != null && topologyCanvas.getScene() != null
+                && topologyCanvas.getScene().getWindow() != null) {
+            return topologyCanvas.getScene().getWindow();
+        }
+        return null;
+    }
+
+    private void initOwnerIfPossible(javafx.scene.control.Dialog<?> d) {
+        Window owner = getApiDialogOwner();
+        if (owner != null) {
+            d.initOwner(owner);
+        }
+    }
+
+    private void initOwnerIfPossible(javafx.scene.control.Alert alert) {
+        Window owner = getApiDialogOwner();
+        if (owner != null) {
+            alert.initOwner(owner);
+        }
+    }
+
+    // Open a small dialog to configure Top-K mode via NDT API
+    private void showApiTopKDialog() {
+        if (mainApp == null) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Not Available");
+            alert.setHeaderText(null);
+            alert.setContentText("Main application is not attached; API controls are disabled.");
+            initOwnerIfPossible(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        // Initialize K with current total flow count if available
+        int defaultK = 10;
+        if (mainApp.getLastFullFlowCount() > 0) {
+            defaultK = mainApp.getLastFullFlowCount();
+        } else if (allFlows != null && !allFlows.isEmpty()) {
+            defaultK = allFlows.size();
+        }
+
+        javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(defaultK));
+        inputDialog.setTitle("API Top-K Flows");
+        inputDialog.setHeaderText("Use NDT API Top-K endpoint");
+        inputDialog.setContentText("Enter K (Top-K flows):");
+        initOwnerIfPossible(inputDialog);
+
+        inputDialog.showAndWait().ifPresent(text -> {
+            try {
+                int k = Integer.parseInt(text.trim());
+                if (k <= 0) {
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                    alert.setTitle("Invalid Input");
+                    alert.setHeaderText(null);
+                    alert.setContentText("K must be a positive integer.");
+                    initOwnerIfPossible(alert);
+                    alert.showAndWait();
+                    return;
+                }
+                mainApp.setApiTopKMode(true, k);
+            } catch (NumberFormatException ex) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitle("Invalid Input");
+                alert.setHeaderText(null);
+                alert.setContentText("Please enter a valid integer for K.");
+                initOwnerIfPossible(alert);
+                alert.showAndWait();
+            }
+        });
+    }
+
+    // Open a small dialog to configure API polling interval
+    private void showApiIntervalDialog() {
+        if (mainApp == null) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Not Available");
+            alert.setHeaderText(null);
+            alert.setContentText("Main application is not attached; API controls are disabled.");
+            initOwnerIfPossible(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        long current = mainApp.getApiPollIntervalSeconds();
+        javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(current));
+        inputDialog.setTitle("API Poll Interval");
+        inputDialog.setHeaderText("Configure NDT API polling interval");
+        inputDialog.setContentText("Interval (seconds, >= 1):");
+        initOwnerIfPossible(inputDialog);
+
+        inputDialog.showAndWait().ifPresent(text -> {
+            try {
+                long seconds = Long.parseLong(text.trim());
+                if (seconds <= 0) {
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                    alert.setTitle("Invalid Input");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Interval must be a positive number.");
+                    initOwnerIfPossible(alert);
+                    alert.showAndWait();
+                    return;
+                }
+                mainApp.setApiPollIntervalSeconds(seconds);
+            } catch (NumberFormatException ex) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitle("Invalid Input");
+                alert.setHeaderText(null);
+                alert.setContentText("Please enter a valid integer for seconds.");
+                initOwnerIfPossible(alert);
+                alert.showAndWait();
+            }
+        });
     }
 
 
@@ -1455,10 +1418,10 @@ public class InfoDialog {
         String dialogTitle = isPlaybackMode ? "Flow Information (Playback)" : "Flow Information (Live)";
         
         
+        // If the Flow Information window was closed, dialog still references a closed Stage;
+        // re-show on a closed Stage is unreliable — always use a new Stage when not showing.
         if (dialog == null || !dialog.isShowing()) {
-            if (dialog == null) {
-                dialog = new Stage();
-            }
+            dialog = new Stage();
             dialog.initModality(Modality.NONE);
             dialog.setTitle(dialogTitle);
             dialog.setWidth(1050);
@@ -1668,7 +1631,7 @@ public class InfoDialog {
         TableColumn<FlowTableItem, String> srcPortCol = new TableColumn<>("Src Port");
         TableColumn<FlowTableItem, String> dstPortCol = new TableColumn<>("Dst Port");
         TableColumn<FlowTableItem, String> protocolCol = new TableColumn<>("Protocol");
-        TableColumn<FlowTableItem, String> sendingRateCol = new TableColumn<>("Sending Rate");
+        TableColumn<FlowTableItem, Number> sendingRateCol = new TableColumn<>("Sending Rate");
         TableColumn<FlowTableItem, String> startTimeCol = new TableColumn<>("First Sample Time");
         TableColumn<FlowTableItem, String> endTimeCol = new TableColumn<>("Latest Sample Time");
         
@@ -1700,7 +1663,19 @@ public class InfoDialog {
         protocolCol.setCellValueFactory(data -> new SimpleStringProperty(convertProtocolNumberToText(data.getValue().protocol)));
         startTimeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().startTime));
         endTimeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().endTime));
-        sendingRateCol.setCellValueFactory(data -> new SimpleStringProperty(formatRate(data.getValue().sendingRate)));
+        // Numeric value for sorting; custom cell for formatted display
+        sendingRateCol.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().sendingRate));
+        sendingRateCol.setCellFactory(col -> new TableCell<FlowTableItem, Number>() {
+            @Override
+            protected void updateItem(Number item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(formatRate(item.doubleValue()));
+                }
+            }
+        });
         
         table.getColumns().addAll(flowCol, srcIpCol, dstIpCol, srcPortCol, dstPortCol, protocolCol, sendingRateCol, startTimeCol, endTimeCol);
         
@@ -1798,6 +1773,8 @@ public class InfoDialog {
                 }
             }
 
+            // Apply numeric sorting (especially for Sending Rate) if user has chosen a sort column
+            sortFlowItemsIfNeeded(table, flowItems);
             table.getItems().addAll(flowItems);
             
             
@@ -1845,6 +1822,8 @@ public class InfoDialog {
                 ));
             }
             
+            // Apply numeric sorting (especially for Sending Rate) if user has chosen a sort column
+            sortFlowItemsIfNeeded(table, flowItems);
             table.getItems().addAll(flowItems);
             
             int totalFlowCount = flowItems.size();
@@ -2081,6 +2060,15 @@ public class InfoDialog {
             }
         });
         
+        // API Top-K & Interval buttons for this Flow Information window
+        Button apiTopKBtn = new Button("API Top-K");
+        apiTopKBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #8e44ad, #6c3483); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 12; -fx-background-radius: 6; -fx-border-radius: 6;");
+        apiTopKBtn.setOnAction(e -> showApiTopKDialog());
+
+        Button apiIntervalBtn = new Button("API Interval");
+        apiIntervalBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #16a085, #117a65); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 12; -fx-background-radius: 6; -fx-border-radius: 6;");
+        apiIntervalBtn.setOnAction(e -> showApiIntervalDialog());
+
         Button portTableBtn = new Button("Port Table");
         portTableBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #6c757d, #5a6268); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 16; -fx-background-radius: 6; -fx-border-radius: 6; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);");
         portTableBtn.setOnMouseEntered(e -> portTableBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #7d848a, #6c757d); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 16; -fx-background-radius: 6; -fx-border-radius: 6; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 0, 2);"));
@@ -2109,7 +2097,7 @@ public class InfoDialog {
             dialog.close();
         });
         
-        buttonBox.getChildren().addAll(toggleFlowBtn, portTableBtn, protocolTableBtn, closeBtn);
+        buttonBox.getChildren().addAll(toggleFlowBtn, apiTopKBtn, apiIntervalBtn, portTableBtn, protocolTableBtn, closeBtn);
         
         // Add direction buttons to a separate container
         HBox mainButtonContainer = new HBox(20);

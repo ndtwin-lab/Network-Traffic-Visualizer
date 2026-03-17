@@ -51,6 +51,14 @@ public class NetworkTopologyApp extends Application {
     private ScheduledExecutorService executor;
     private volatile int lastNodeCount = 0; // Record the previous node count (volatile for thread safety)
     private volatile boolean isPlaybackMode = false; // Flag to control API updates
+    // Control whether to use Top-K flow API instead of full flow API (real-time mode only)
+    private volatile boolean apiTopKEnabled = false;
+    private volatile int apiTopKValue = 0;
+    // Last known total flow count when using the full flow API
+    private volatile int lastFullFlowCount = 0;
+    // Logical polling interval for NDT API (seconds)
+    private volatile long apiPollIntervalSeconds = 1;
+    private volatile long lastApiPollMillis = 0;
     
     // Playback panel
     private PlaybackPanel playbackPanel;
@@ -136,6 +144,7 @@ public class NetworkTopologyApp extends Application {
         
         // Create InfoDialog and set it to TopologyCanvas
         InfoDialog infoDialog = new InfoDialog(topologyCanvas, flows);
+        infoDialog.setMainApp(this);
         topologyCanvas.setInfoDialog(infoDialog);
 
         // Auto-display flow animation
@@ -295,11 +304,27 @@ public class NetworkTopologyApp extends Application {
                 return;
             }
             
+            // Respect configurable logical polling interval
+            long now = System.currentTimeMillis();
+            long intervalMs = Math.max(1000L, apiPollIntervalSeconds * 1000L);
+            if (now - lastApiPollMillis < intervalMs) {
+                return;
+            }
+            lastApiPollMillis = now;
+            
             
             java.util.concurrent.CompletableFuture<GraphData> graphDataFuture = 
                 CompletableFuture.supplyAsync(() -> apiClient.getGraphData(), executor);
             java.util.concurrent.CompletableFuture<DetectedFlowData[]> detectedFlowsFuture = 
-                CompletableFuture.supplyAsync(() -> apiClient.getDetectedFlowData(), executor);
+                CompletableFuture.supplyAsync(() -> {
+                    // When Top-K mode is enabled, call the Top-K API; otherwise use full flow API.
+                    if (apiTopKEnabled && apiTopKValue > 0) {
+                        System.out.println("[API] Using get_detected_top_k_flow_data with K=" + apiTopKValue);
+                        return apiClient.getDetectedTopKFlowData(apiTopKValue);
+                    } else {
+                        return apiClient.getDetectedFlowData();
+                    }
+                }, executor);
             java.util.concurrent.CompletableFuture<Map<String, Integer>> cpuUtilizationFuture = 
                 CompletableFuture.supplyAsync(() -> apiClient.getCpuUtilization(), executor);
             java.util.concurrent.CompletableFuture<Map<String, Integer>> memoryUtilizationFuture = 
@@ -330,6 +355,10 @@ public class NetworkTopologyApp extends Application {
                 List<Node> apiNodes = convertGraphNodes(graphData.nodes, graphData.edges, topologyCanvas.getWidth(), topologyCanvas.getHeight());
                 // First convert detected flows to get complete path information (pass apiNodes for DPID lookup)
                 List<Flow> apiFlows = convertDetectedFlows(detectedFlows, apiNodes);
+                // When using full flow API, update last known total flow count for UI display
+                if (!apiTopKEnabled || apiTopKValue <= 0) {
+                    lastFullFlowCount = apiFlows.size();
+                }
                 // Then convert links with detected flows for complete path info in flow_set
                 List<Link> apiLinks = convertGraphLinks(graphData.edges, apiNodes, apiFlows);
                 
@@ -1625,6 +1654,57 @@ public class NetworkTopologyApp extends Application {
     // Getter for topologyCanvas
     public TopologyCanvas getTopologyCanvas() {
         return topologyCanvas;
+    }
+
+    /**
+     * Enable or disable using the Top-K flow API in real-time mode.
+     * When enabled, subsequent polling cycles will call
+     * /ndt/get_detected_top_k_flow_data?k=K instead of the full flow API.
+     */
+    public void setApiTopKMode(boolean enabled, int k) {
+        if (enabled) {
+            int safeK = Math.max(1, k);
+            this.apiTopKEnabled = true;
+            this.apiTopKValue = safeK;
+            System.out.println("[API] Top-K mode ENABLED with K=" + safeK);
+        } else {
+            this.apiTopKEnabled = false;
+            this.apiTopKValue = 0;
+            System.out.println("[API] Top-K mode DISABLED (using full flow API)");
+        }
+    }
+
+    /**
+     * Update the logical polling interval (in seconds) for NDT API calls.
+     * This does not recreate the scheduler; instead the scheduled task
+     * checks this value and only performs API calls when the elapsed time
+     * exceeds the configured interval.
+     */
+    public void setApiPollIntervalSeconds(long seconds) {
+        long safe = seconds <= 0 ? 1 : seconds;
+        this.apiPollIntervalSeconds = safe;
+        System.out.println("[API] Poll interval set to " + safe + " seconds");
+    }
+
+    public long getApiPollIntervalSeconds() {
+        return apiPollIntervalSeconds;
+    }
+
+    /**
+     * Returns true if the real-time API polling is currently using the Top-K
+     * flow endpoint instead of the full flow endpoint.
+     */
+    public boolean isApiTopKModeEnabled() {
+        return apiTopKEnabled && apiTopKValue > 0;
+    }
+
+    /**
+     * Returns the last known total flow count from the full flow API.
+     * In Top-K mode this value is not updated, so it represents the last
+     * "full" snapshot size before switching to Top-K.
+     */
+    public int getLastFullFlowCount() {
+        return lastFullFlowCount;
     }
 
     /**

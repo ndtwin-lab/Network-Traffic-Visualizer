@@ -431,7 +431,7 @@ public class SideBar extends VBox {
     private void showSettingsDialog() {
         javafx.scene.control.Dialog<Double> dialog = new javafx.scene.control.Dialog<>();
         dialog.setTitle("Flow Animation Settings");
-        dialog.setHeaderText("Adjust how long a flow takes to traverse a single link.");
+        dialog.setHeaderText("Adjust flow animation speed and API fetch interval.");
         
         
         if (primaryStage != null) {
@@ -482,14 +482,53 @@ public class SideBar extends VBox {
         );
         infoLabel.setWrapText(true);
 
+        // API fetch interval controls
+        javafx.scene.control.Label apiIntervalLabel = new javafx.scene.control.Label();
+        javafx.scene.control.Slider apiIntervalSlider = new javafx.scene.control.Slider(1, 30, 1);
+        if (mainApp != null) {
+            long currentInterval = mainApp.getApiPollIntervalSeconds();
+            apiIntervalSlider.setValue(currentInterval);
+        }
+        apiIntervalSlider.setShowTickLabels(true);
+        apiIntervalSlider.setShowTickMarks(true);
+        apiIntervalSlider.setMajorTickUnit(5.0);
+        apiIntervalSlider.setMinorTickCount(4);
+        apiIntervalSlider.setSnapToTicks(true);
+
+        apiIntervalLabel.setText("API fetch interval: " + (int) apiIntervalSlider.getValue() + " seconds");
+        apiIntervalSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            int seconds = newVal.intValue();
+            apiIntervalLabel.setText("API fetch interval: " + seconds + " seconds");
+        });
+
+        javafx.scene.control.Label apiInfoLabel = new javafx.scene.control.Label(
+                """
+                        This setting controls how often the app calls the NDTwin API
+                        to refresh topology and flow data.
+
+                        • Lower values = smoother, more real-time animation
+                        • Higher values = fewer API calls, lower backend load
+                        """
+        );
+        apiInfoLabel.setWrapText(true);
+
         javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(10);
         content.getChildren().add(darkModeCheck); 
-        content.getChildren().addAll(infoLabel, speedLabel, speedSlider);
+        content.getChildren().addAll(
+                infoLabel, speedLabel, speedSlider,
+                new javafx.scene.control.Separator(),
+                apiInfoLabel, apiIntervalLabel, apiIntervalSlider
+        );
         dialog.getDialogPane().setContent(content);
 
       
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == applyButtonType) {
+                // Apply API fetch interval when user clicks Apply
+                if (mainApp != null) {
+                    long seconds = (long) apiIntervalSlider.getValue();
+                    mainApp.setApiPollIntervalSeconds(seconds);
+                }
                 return speedSlider.getValue();
             }
             return null;
@@ -748,7 +787,7 @@ public class SideBar extends VBox {
         
         javafx.scene.control.Dialog<Integer> dialog = new javafx.scene.control.Dialog<>();
         dialog.setTitle("Top-K Flows");
-        dialog.setHeaderText("Display Top-K Flows by Sending Rate");
+        dialog.setHeaderText("Display Top-K Flows from NDT API");
         
         
         if (primaryStage != null) {
@@ -765,12 +804,14 @@ public class SideBar extends VBox {
         content.setPadding(new Insets(20));
         
         
+        int totalFlowCountForDisplay = getTotalFlowCountForDisplay();
+        
         Label infoLabel = new Label(
-            "This function allows you to display only the top-K flows\n" +
-            "with the highest sending rates on the topology.\n\n" +
-            "• Flows are ranked by: estimated_flow_sending_rate_bps\n" +
-            "• Enter a number K to show only the top-K flows\n" +
-            "• Current total flow number: " + flows.size()
+            "This function uses the NDT API to display only the Top-K active flows.\n\n" +
+            "• Backend endpoint: /ndt/get_detected_top_k_flow_data?k=K\n" +
+            "• The API ranks flows by packet rate (latest 1-sec timeslot)\n" +
+            "• Enter a number K to request the Top-K flows from NDTwin\n" +
+            "• Current total flow number (last full snapshot): " + totalFlowCountForDisplay
         );
         infoLabel.setWrapText(true);
         infoLabel.setFont(Font.font("Arial", 12));
@@ -790,7 +831,7 @@ public class SideBar extends VBox {
         
         
         int currentDisplayingCount = topologyCanvas.getVisibleFlowCount();
-        int totalFlowCount = flows.size();
+        int totalFlowCount = totalFlowCountForDisplay;
         boolean isTopKEnabled = topologyCanvas.isTopKEnabled();
         
         
@@ -838,11 +879,18 @@ public class SideBar extends VBox {
         
         dialog.showAndWait().ifPresent(k -> {
             if (k >= flows.size()) {
-                
+                // Show all flows: disable API Top-K mode and canvas Top-K filter
+                if (mainApp != null) {
+                    mainApp.setApiTopKMode(false, 0);
+                }
                 topologyCanvas.setTopKFlows(null, 0); 
                 updateTopKButtonText(); 
                 System.out.println("[SIDEBAR] Showing all flows (K=" + k + " >= total=" + flows.size() + ")");
             } else {
+                // Enable API Top-K mode with the chosen K and apply visual Top-K filter
+                if (mainApp != null) {
+                    mainApp.setApiTopKMode(true, k);
+                }
                 applyTopKFlows(k);
                 System.out.println("[SIDEBAR] Applied Top-K flows filter: K=" + k);
             }
@@ -893,7 +941,7 @@ public class SideBar extends VBox {
         
         
         int displayingCount = topologyCanvas.getVisibleFlowCount();
-        int totalCount = flows != null ? flows.size() : 0;
+        int totalCount = getTotalFlowCountForDisplay();
         boolean isTopKEnabled = topologyCanvas.isTopKEnabled();
         
         System.out.println("[SIDEBAR] updateTopKButtonText: enabled=" + isTopKEnabled + 
@@ -918,6 +966,26 @@ public class SideBar extends VBox {
             }
             System.out.println("[SIDEBAR] Set button text to: Top-K flows (gray)");
         }
+    }
+    
+    /**
+     * Returns the total flow count to display in the UI.
+     * In normal mode this is just the current flows.size().
+     * In API Top-K mode we use the last known full flow count
+     * from the main app so the denominator (e.g. 3/4) stays correct
+     * even though only Top-K flows are being fetched.
+     */
+    private int getTotalFlowCountForDisplay() {
+        int total = flows != null ? flows.size() : 0;
+        
+        if (mainApp != null && mainApp.isApiTopKModeEnabled()) {
+            int fullCount = mainApp.getLastFullFlowCount();
+            if (fullCount > 0) {
+                total = fullCount;
+            }
+        }
+        
+        return total;
     }
     
     private void showAlert(String title, String message) {
@@ -1008,7 +1076,7 @@ public class SideBar extends VBox {
         ImageView gradientImageView = null;
         try {
             
-            Image gradientImage = new Image(getClass().getResourceAsStream("/images/gradieantcolor.png"));
+            Image gradientImage = new Image(getClass().getResourceAsStream("/images/gradieantcolor-2.png"));
             gradientImageView = new ImageView(gradientImage);
             gradientImageView.setFitWidth(30); 
             gradientImageView.setFitHeight(120); 
