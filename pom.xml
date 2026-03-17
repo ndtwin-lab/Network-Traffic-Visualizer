@@ -211,6 +211,7 @@
                     <executable>java</executable>
                     <arguments>
                         <argument>--module-path</argument>
+                        <!--suppress UnresolvedMavenProperty -->
                         <argument>${project.build.directory}/classes${path.separator}${javafx.classpath}</argument>
                         <argument>--add-modules</argument>
                         <argument>javafx.controls,javafx.fxml,javafx.web</argument>

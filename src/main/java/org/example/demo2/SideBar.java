@@ -1008,7 +1008,7 @@ public class SideBar extends VBox {
         ImageView gradientImageView = null;
         try {
             
-            Image gradientImage = new Image(getClass().getResourceAsStream("/images/gradieantcolor-2.png"));
+            Image gradientImage = new Image(getClass().getResourceAsStream("/images/gradieantcolor.png"));
             gradientImageView = new ImageView(gradientImage);
             gradientImageView.setFitWidth(30); 
             gradientImageView.setFitHeight(120); 

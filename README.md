@@ -9,7 +9,7 @@ Network Traffic Visualizer is a JavaFX desktop application for visualizing netwo
 - OS: Windows, macOS, or Linux
 - Java: JDK 21
 - Build tool: Maven (wrapper included via `./mvnw`)
-- Network: Reachable NDT API endpoint for live mode
+- Network: Reachable NDT API endpoint for Real-time  mode
 
 ## Project Structure
 
