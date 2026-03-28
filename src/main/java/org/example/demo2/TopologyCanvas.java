@@ -1636,16 +1636,15 @@ public class TopologyCanvas extends Canvas {
             }
             
             for (Flow flow : flows) {
-                
-                
-                Color flowColor = getEmphasizedColorForFlow(flow);
+                // Use stable base color so all views (topology, sidebar legends, dialogs)
+                // see the same color for the same flow, independent of rate changes.
+                Color flowColor = getColorForFlow(flow);
                 flowColors.add(flowColor);
-                
-                if (DEBUG) System.out.println("[DEBUG] Flow color assignment (hash-based + emphasis): " + 
+
+                if (DEBUG) System.out.println("[DEBUG] Flow color assignment (hash-based, fixed): " +
                     flow.srcIp + ":" + flow.srcPort + " -> " + flow.dstIp + ":" + flow.dstPort +
                     " rate=" + flow.estimatedFlowSendingRateBpsInTheLastSec + " color=" + flowColor);
-                
-                
+
                 double ratio = totalRate > 0 ? flow.estimatedFlowSendingRateBpsInTheLastSec / totalRate : 1.0 / flows.size();
                 flowRatios.add(ratio);
             }

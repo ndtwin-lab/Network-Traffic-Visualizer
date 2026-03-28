@@ -964,8 +964,8 @@ public class InfoDialog {
         }
 
         javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(defaultK));
-        inputDialog.setTitle("API Top-K Flows");
-        inputDialog.setHeaderText("Use NDT API Top-K endpoint");
+        inputDialog.setTitle("Top-K Flows");
+        inputDialog.setHeaderText("Display only Top-k Flows");
         inputDialog.setContentText("Enter K (Top-K flows):");
         initOwnerIfPossible(inputDialog);
 
@@ -1007,8 +1007,8 @@ public class InfoDialog {
 
         long current = mainApp.getApiPollIntervalSeconds();
         javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(current));
-        inputDialog.setTitle("API Poll Interval");
-        inputDialog.setHeaderText("Configure NDT API polling interval");
+        inputDialog.setTitle("Update Interval");
+        inputDialog.setHeaderText("Configure update interval");
         inputDialog.setContentText("Interval (seconds, >= 1):");
         initOwnerIfPossible(inputDialog);
 
@@ -1700,7 +1700,6 @@ public class InfoDialog {
         
         
         Runnable refreshFlowTable = () -> {
-            table.getItems().clear();
             List<FlowTableItem> flowItems = new ArrayList<>();
             
             System.out.println("[TEMP] Current direction: " + currentDirection[0]);
@@ -1773,9 +1772,11 @@ public class InfoDialog {
                 }
             }
 
-            // Apply numeric sorting (especially for Sending Rate) if user has chosen a sort column
-            sortFlowItemsIfNeeded(table, flowItems);
-            table.getItems().addAll(flowItems);
+            // Replace items and re-apply current TableView sort order
+            table.getItems().setAll(flowItems);
+            if (!table.getSortOrder().isEmpty()) {
+                table.sort();
+            }
             
             
             int flowCount = flowItems.size();
@@ -1809,7 +1810,6 @@ public class InfoDialog {
         
         // Function to update all flows table
         Runnable refreshAllFlowsTable = () -> {
-            table.getItems().clear();
             List<FlowTableItem> flowItems = new ArrayList<>();
             
             for (Flow flow : allFlows) {
@@ -1822,9 +1822,11 @@ public class InfoDialog {
                 ));
             }
             
-            // Apply numeric sorting (especially for Sending Rate) if user has chosen a sort column
-            sortFlowItemsIfNeeded(table, flowItems);
-            table.getItems().addAll(flowItems);
+            // Replace items and re-apply current TableView sort order
+            table.getItems().setAll(flowItems);
+            if (!table.getSortOrder().isEmpty()) {
+                table.sort();
+            }
             
             int totalFlowCount = flowItems.size();
             titleLabel.setText("All Flow Detected on the Network (" + totalFlowCount + " flows)");
@@ -2061,11 +2063,11 @@ public class InfoDialog {
         });
         
         // API Top-K & Interval buttons for this Flow Information window
-        Button apiTopKBtn = new Button("API Top-K");
+        Button apiTopKBtn = new Button("Top-K");
         apiTopKBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #8e44ad, #6c3483); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 12; -fx-background-radius: 6; -fx-border-radius: 6;");
         apiTopKBtn.setOnAction(e -> showApiTopKDialog());
 
-        Button apiIntervalBtn = new Button("API Interval");
+        Button apiIntervalBtn = new Button("Update Interval");
         apiIntervalBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #16a085, #117a65); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-padding: 8 12; -fx-background-radius: 6; -fx-border-radius: 6;");
         apiIntervalBtn.setOnAction(e -> showApiIntervalDialog());
 

@@ -431,7 +431,7 @@ public class SideBar extends VBox {
     private void showSettingsDialog() {
         javafx.scene.control.Dialog<Double> dialog = new javafx.scene.control.Dialog<>();
         dialog.setTitle("Flow Animation Settings");
-        dialog.setHeaderText("Adjust flow animation speed and API fetch interval.");
+        dialog.setHeaderText("Adjust flow animation speed and update interval.");
         
         
         if (primaryStage != null) {
@@ -495,19 +495,19 @@ public class SideBar extends VBox {
         apiIntervalSlider.setMinorTickCount(4);
         apiIntervalSlider.setSnapToTicks(true);
 
-        apiIntervalLabel.setText("API fetch interval: " + (int) apiIntervalSlider.getValue() + " seconds");
+        apiIntervalLabel.setText("update interval: " + (int) apiIntervalSlider.getValue() + " seconds");
         apiIntervalSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             int seconds = newVal.intValue();
-            apiIntervalLabel.setText("API fetch interval: " + seconds + " seconds");
+            apiIntervalLabel.setText("update interval: " + seconds + " seconds");
         });
 
         javafx.scene.control.Label apiInfoLabel = new javafx.scene.control.Label(
                 """
-                        This setting controls how often the app calls the NDTwin API
-                        to refresh topology and flow data.
+                        This setting controls how often the app 
+                        refreshes topology and flow data.
 
                         • Lower values = smoother, more real-time animation
-                        • Higher values = fewer API calls, lower backend load
+                        • Higher values = fewer update interval, lower backend load
                         """
         );
         apiInfoLabel.setWrapText(true);
@@ -787,7 +787,7 @@ public class SideBar extends VBox {
         
         javafx.scene.control.Dialog<Integer> dialog = new javafx.scene.control.Dialog<>();
         dialog.setTitle("Top-K Flows");
-        dialog.setHeaderText("Display Top-K Flows from NDT API");
+        dialog.setHeaderText("Display Top-K Flows");
         
         
         if (primaryStage != null) {
@@ -807,10 +807,7 @@ public class SideBar extends VBox {
         int totalFlowCountForDisplay = getTotalFlowCountForDisplay();
         
         Label infoLabel = new Label(
-            "This function uses the NDT API to display only the Top-K active flows.\n\n" +
-            "• Backend endpoint: /ndt/get_detected_top_k_flow_data?k=K\n" +
-            "• The API ranks flows by packet rate (latest 1-sec timeslot)\n" +
-            "• Enter a number K to request the Top-K flows from NDTwin\n" +
+            "This function uses to display only the Top-K active flows.\n\n" +
             "• Current total flow number (last full snapshot): " + totalFlowCountForDisplay
         );
         infoLabel.setWrapText(true);
