@@ -206,7 +206,7 @@ public class FlowFilter extends VBox {
                 "Source Device: %s (%s:%d)\nDestination Device: %s (%s:%d)\nProtocol: %d\nRate: %.2f bps\nPath: %s",
                 srcDeviceName, flow.srcIp, flow.srcPort, 
                 dstDeviceName, flow.dstIp, flow.dstPort, 
-                flow.protocolId, flow.estimatedFlowSendingRateBpsInTheLastSec, pathInfo
+                flow.protocolId, flow.getSendingRateBps(), pathInfo
             );
             Tooltip tooltip = new Tooltip(tooltipText);
             Tooltip.install(checkBox, tooltip);

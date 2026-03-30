@@ -37,4 +37,13 @@ public class Flow {
         this.estimatedPacketRateInTheLastSec = estimatedPacketRateInTheLastSec;
         this.estimatedPacketRateInTheProceeding1secTimeslot = estimatedPacketRateInTheProceeding1secTimeslot;
     }
+
+    /**
+     * Sending rate for UI, sorting, and topology weighting.
+     * Uses {@code estimated_flow_sending_rate_bps_in_the_proceeding_1sec_timeslot} so the client does not
+     * rely on the heavier last-second estimate when many flows are present.
+     */
+    public double getSendingRateBps() {
+        return estimatedFlowSendingRateBpsInTheProceeding1secTimeslot;
+    }
 } 

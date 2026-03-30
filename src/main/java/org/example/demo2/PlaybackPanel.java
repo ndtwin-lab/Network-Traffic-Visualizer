@@ -2085,7 +2085,7 @@ public class PlaybackPanel extends VBox {
                              convertIpForDisplay(flow.srcIp) + ":" + flow.srcPort + " -> " +
                              convertIpForDisplay(flow.dstIp) + ":" + flow.dstPort);
             System.out.println("[PLAYBACK]     pathNodes: " + (flow.pathNodes != null ? flow.pathNodes : "NULL"));
-            System.out.println("[PLAYBACK]     rate: " + flow.estimatedFlowSendingRateBpsInTheLastSec);
+            System.out.println("[PLAYBACK]     rate: " + flow.getSendingRateBps());
         }
         
         
@@ -2117,7 +2117,7 @@ public class PlaybackPanel extends VBox {
         System.out.println("[PLAYBACK]   Path too short (< 2 nodes): " + shortPathCount);
         
         // Sort by sending rate (highest first) and take top 20
-        validFlows.sort((a, b) -> Double.compare(b.estimatedFlowSendingRateBpsInTheLastSec, a.estimatedFlowSendingRateBpsInTheLastSec));
+        validFlows.sort((a, b) -> Double.compare(b.getSendingRateBps(), a.getSendingRateBps()));
         List<Flow> topFlows = validFlows.subList(0, Math.min(20, validFlows.size()));
         
         System.out.println("[PLAYBACK] Selected top " + topFlows.size() + " flows by sending rate:");
@@ -2125,7 +2125,7 @@ public class PlaybackPanel extends VBox {
             Flow flow = topFlows.get(i);
             System.out.println("[PLAYBACK] Flow " + i + ": " + convertIpForDisplay(flow.srcIp) + ":" + flow.srcPort + 
                              " -> " + convertIpForDisplay(flow.dstIp) + ":" + flow.dstPort + 
-                             " (rate: " + flow.estimatedFlowSendingRateBpsInTheLastSec + ")");
+                             " (rate: " + flow.getSendingRateBps() + ")");
         }
         
         int assignedFlows = 0;
@@ -2190,7 +2190,7 @@ public class PlaybackPanel extends VBox {
             
             int directlyAssigned = 0;
             List<Flow> sortedFlows = new ArrayList<>(flows);
-            sortedFlows.sort((a, b) -> Double.compare(b.estimatedFlowSendingRateBpsInTheLastSec, a.estimatedFlowSendingRateBpsInTheLastSec));
+            sortedFlows.sort((a, b) -> Double.compare(b.getSendingRateBps(), a.getSendingRateBps()));
             List<Flow> topDirectFlows = sortedFlows.subList(0, Math.min(20, sortedFlows.size()));
             
             for (Flow flow : topDirectFlows) {

@@ -46,8 +46,10 @@ public class TopologyCanvas extends Canvas {
     private Map<String, Integer> flowIndexCache = new HashMap<>();
     
     
-    // Key: flowKey (srcIp_dstIp_srcPort_dstPort_protocolId), Value: colorIndex (0-23)
+    // Key: flowKey (srcIp_dstIp_srcPort_dstPort_protocolId), Value: color slot for getFlowColor / getDistinctColor
     private Map<String, Integer> flowColorAssignmentMap = new HashMap<>();
+    /** Next slot for a flow key never seen before; avoids hash % 24 collisions between distinct flows. */
+    private int nextFlowColorSlot = 0;
     
     
     private boolean topKEnabledRealtime = false; 
@@ -1412,7 +1414,7 @@ public class TopologyCanvas extends Canvas {
             if (!forwardFlows.isEmpty()) {
                 double forwardSendingRate = 0;
                 for (Flow flow : forwardFlows) {
-                    forwardSendingRate += flow.estimatedFlowSendingRateBpsInTheLastSec;
+                    forwardSendingRate += flow.getSendingRateBps();
                 }
                 drawMixedFlowAnimation(gc, srcNode, tgtNode, forwardFlows, forwardSendingRate, link);
             }
@@ -1421,7 +1423,7 @@ public class TopologyCanvas extends Canvas {
             if (!reverseFlows.isEmpty()) {
                 double reverseSendingRate = 0;
                 for (Flow flow : reverseFlows) {
-                    reverseSendingRate += flow.estimatedFlowSendingRateBpsInTheLastSec;
+                    reverseSendingRate += flow.getSendingRateBps();
                 }
                 
                 drawMixedFlowAnimation(gc, tgtNode, srcNode, reverseFlows, reverseSendingRate, link);
@@ -1549,7 +1551,7 @@ public class TopologyCanvas extends Canvas {
             if (!forwardFlows.isEmpty()) {
                 double forwardSendingRate = 0;
                 for (Flow flow : forwardFlows) {
-                    forwardSendingRate += flow.estimatedFlowSendingRateBpsInTheLastSec;
+                    forwardSendingRate += flow.getSendingRateBps();
                 }
                 
                 if (DEBUG) System.out.println("[DEBUG] drawPlaybackFlows: Drawing " + forwardFlows.size() + " FORWARD flows with totalRate=" + forwardSendingRate);
@@ -1561,7 +1563,7 @@ public class TopologyCanvas extends Canvas {
             if (!reverseFlows.isEmpty()) {
                 double reverseSendingRate = 0;
                 for (Flow flow : reverseFlows) {
-                    reverseSendingRate += flow.estimatedFlowSendingRateBpsInTheLastSec;
+                    reverseSendingRate += flow.getSendingRateBps();
                 }
                 
                 if (DEBUG) System.out.println("[DEBUG] drawPlaybackFlows: Drawing " + reverseFlows.size() + " REVERSE flows with totalRate=" + reverseSendingRate);
@@ -1627,7 +1629,7 @@ public class TopologyCanvas extends Canvas {
             
             double totalRate = 0;
             for (Flow flow : flows) {
-                totalRate += flow.estimatedFlowSendingRateBpsInTheLastSec;
+                totalRate += flow.getSendingRateBps();
             }
             
             
@@ -1643,9 +1645,9 @@ public class TopologyCanvas extends Canvas {
 
                 if (DEBUG) System.out.println("[DEBUG] Flow color assignment (hash-based, fixed): " +
                     flow.srcIp + ":" + flow.srcPort + " -> " + flow.dstIp + ":" + flow.dstPort +
-                    " rate=" + flow.estimatedFlowSendingRateBpsInTheLastSec + " color=" + flowColor);
+                    " rate=" + flow.getSendingRateBps() + " color=" + flowColor);
 
-                double ratio = totalRate > 0 ? flow.estimatedFlowSendingRateBpsInTheLastSec / totalRate : 1.0 / flows.size();
+                double ratio = totalRate > 0 ? flow.getSendingRateBps() / totalRate : 1.0 / flows.size();
                 flowRatios.add(ratio);
             }
         }
@@ -1941,9 +1943,11 @@ public class TopologyCanvas extends Canvas {
             System.out.println("[DEBUG] Using predefined color for index " + index + ": " + color);
             return color;
         } else {
-            
-            double hue = (index * 180.0) % 360.0; 
-            
+            // Golden-angle hue steps so consecutive / high indices spread around the color wheel.
+            // (index * 180) % 360 only alternates 0° and 180°, which collapses many flows to near-duplicates.
+            final double phi = (1.0 + Math.sqrt(5.0)) / 2.0;
+            final double goldenAngleDeg = 360.0 / (phi * phi);
+            double hue = (index * goldenAngleDeg) % 360.0;
             
             int colorGroup = (index - distinctColors.length) % 12;
             double saturation, brightness;
@@ -2061,12 +2065,17 @@ public class TopologyCanvas extends Canvas {
 
 
 
+    private void clearFlowColorAssignments() {
+        flowColorAssignmentMap.clear();
+        nextFlowColorSlot = 0;
+    }
+
     private int getStableColorIndex(String flowKey) {
         Integer cached = flowColorAssignmentMap.get(flowKey);
         if (cached != null) {
             return cached;
         }
-        int index = Math.abs(flowKey.hashCode()) % 24;
+        int index = nextFlowColorSlot++;
         flowColorAssignmentMap.put(flowKey, index);
         return index;
     }
@@ -2082,40 +2091,6 @@ public class TopologyCanvas extends Canvas {
         String key = generateFlowKey(flow);
         int colorIndex = getStableColorIndex(key);
         return getFlowColor(colorIndex);
-    }
-
-    
-
-
-
-
-
-
-    private Color getEmphasizedColorForFlow(Flow flow) {
-        Color base = getColorForFlow(flow);
-        if (flow == null) {
-            return base;
-        }
-
-        double rate = flow.estimatedFlowSendingRateBpsInTheLastSec;
-
-        
-        
-        
-        
-        final double HIGH_RATE_THRESHOLD_BPS = 1_000_000_000.0;   // 1 Gbps
-        final double LOW_RATE_THRESHOLD_BPS  =   100_000_000.0;   // 100 Mbps
-
-        if (rate >= HIGH_RATE_THRESHOLD_BPS) {
-            
-            return base.brighter().brighter();
-        } else if (rate < LOW_RATE_THRESHOLD_BPS) {
-            
-            return base.darker();
-        } else {
-            
-            return base;
-        }
     }
 
     public Color getFlowColor(int flowIndex) {
@@ -2572,7 +2547,7 @@ public class TopologyCanvas extends Canvas {
                         System.out.println("[TOP-K] Flow " + i + " matched: " + 
                                          flow.srcIp + ":" + flow.srcPort + " -> " + 
                                          flow.dstIp + ":" + flow.dstPort + 
-                                         " (Rate: " + flow.estimatedFlowSendingRateBpsInTheLastSec + " bps)");
+                                         " (Rate: " + flow.getSendingRateBps() + " bps)");
                         break; 
                     }
                 }
@@ -2629,8 +2604,8 @@ public class TopologyCanvas extends Canvas {
         
         List<Flow> sortedFlows = new ArrayList<>(flows);
         sortedFlows.sort((f1, f2) -> Double.compare(
-            f2.estimatedFlowSendingRateBpsInTheLastSec, 
-            f1.estimatedFlowSendingRateBpsInTheLastSec
+            f2.getSendingRateBps(), 
+            f1.getSendingRateBps()
         ));
         
         
@@ -2642,7 +2617,7 @@ public class TopologyCanvas extends Canvas {
         for (int i = 0; i < Math.min(3, topKFlows.size()); i++) {
             Flow f = topKFlows.get(i);
             System.out.println("[TOP-K] [" + mode + "]   #" + (i+1) + ": " + f.srcIp + ":" + f.srcPort + " -> " + 
-                             f.dstIp + ":" + f.dstPort + " | Rate: " + f.estimatedFlowSendingRateBpsInTheLastSec + " bps");
+                             f.dstIp + ":" + f.dstPort + " | Rate: " + f.getSendingRateBps() + " bps");
         }
         
         
@@ -2974,7 +2949,7 @@ public class TopologyCanvas extends Canvas {
                     }
                 }
             
-            flowColorAssignmentMap.clear();
+            clearFlowColorAssignments();
             System.out.println("[DEBUG] (dragging) No flows - cleared all link flow_sets and color assignments");
             }
             
@@ -2991,7 +2966,7 @@ public class TopologyCanvas extends Canvas {
             selectedNodes.clear(); 
             
             if (this.flows.isEmpty()) {
-                flowColorAssignmentMap.clear();
+                clearFlowColorAssignments();
             }
             draw();
             return;
@@ -3004,7 +2979,7 @@ public class TopologyCanvas extends Canvas {
             this.flows.clear();
             selectedNodes.clear();
             
-            flowColorAssignmentMap.clear();
+            clearFlowColorAssignments();
             draw();
             return;
         }
@@ -3090,7 +3065,7 @@ public class TopologyCanvas extends Canvas {
                 }
             }
             
-            flowColorAssignmentMap.clear();
+            clearFlowColorAssignments();
             System.out.println("[DEBUG] No flows - cleared all link flow_sets and color assignments");
         }
         

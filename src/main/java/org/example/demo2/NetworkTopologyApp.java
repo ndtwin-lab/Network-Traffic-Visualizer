@@ -81,8 +81,11 @@ public class NetworkTopologyApp extends Application {
         List<Link> links = new ArrayList<>();
         List<Flow> flows = new ArrayList<>();
 
-        // Load settings if file exists
-        double savedFlowSpeed = loadSettings();
+        // Load settings if file exists (flow speed + API poll interval)
+        LoadedSettings loaded = loadAppSettings();
+        if (loaded.apiPollIntervalSeconds != null) {
+            setApiPollIntervalSeconds(loaded.apiPollIntervalSeconds);
+        }
 
         // Initialize empty nodes, links, flows, will be filled by API later
 
@@ -151,8 +154,8 @@ public class NetworkTopologyApp extends Application {
         topologyCanvas.setShowFlows(!flows.isEmpty());
         
         // Apply saved speed settings
-        if (savedFlowSpeed > 0) {
-            topologyCanvas.setFlowMoveSpeed(savedFlowSpeed);
+        if (loaded.flowMoveSpeed > 0) {
+            topologyCanvas.setFlowMoveSpeed(loaded.flowMoveSpeed);
         }
 
         // Create main layout
@@ -251,7 +254,7 @@ public class NetworkTopologyApp extends Application {
         // Save positions when closing
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
             // saveNodePositions(nodes); // Removed calls related to node_positions.json
-            saveSettings(topologyCanvas.getFlowMoveSpeed());
+            persistUserSettings();
             
             
             if (sideBar != null) {
@@ -424,26 +427,61 @@ public class NetworkTopologyApp extends Application {
     }
 
 
-    private double loadSettings() {
+    private static final class LoadedSettings {
+        double flowMoveSpeed;
+        /** null = omit from file, keep constructor default for poll interval */
+        Long apiPollIntervalSeconds;
+    }
+
+    private LoadedSettings loadAppSettings() {
+        LoadedSettings s = new LoadedSettings();
+        s.flowMoveSpeed = 0.0;
+        s.apiPollIntervalSeconds = null;
         File file = new File(SETTINGS_FILE);
         if (!file.exists()) {
-            return 0.0;
+            return s;
         }
-           
         try (FileReader reader = new FileReader(file)) {
             Gson gson = new Gson();
             JsonObject obj = gson.fromJson(reader, JsonObject.class);
-            return obj.get("flow_move_speed").getAsDouble();
+            if (obj == null) {
+                return s;
+            }
+            if (obj.has("flow_move_speed") && !obj.get("flow_move_speed").isJsonNull()) {
+                try {
+                    s.flowMoveSpeed = obj.get("flow_move_speed").getAsDouble();
+                } catch (Exception ex) {
+                    System.err.println("Error parsing flow_move_speed: " + ex.getMessage());
+                }
+            }
+            if (obj.has("api_poll_interval_seconds") && !obj.get("api_poll_interval_seconds").isJsonNull()) {
+                try {
+                    s.apiPollIntervalSeconds = obj.get("api_poll_interval_seconds").getAsLong();
+                } catch (Exception ex) {
+                    System.err.println("Error parsing api_poll_interval_seconds: " + ex.getMessage());
+                }
+            }
         } catch (IOException e) {
             System.err.println("Error loading settings: " + e.getMessage());
-            return 0.0;
         }
+        return s;
     }
 
-    private void saveSettings(double flowMoveSpeed) {
+    /**
+     * Writes flow animation speed and API poll interval to {@link #SETTINGS_FILE}.
+     */
+    public void persistUserSettings() {
+        if (topologyCanvas == null) {
+            return;
+        }
+        writeSettingsFile(topologyCanvas.getFlowMoveSpeed(), apiPollIntervalSeconds);
+    }
+
+    private void writeSettingsFile(double flowMoveSpeed, long apiPollIntervalSeconds) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(SETTINGS_FILE))) {
             writer.println("{");
-            writer.println("  \"flow_move_speed\": " + flowMoveSpeed);
+            writer.println("  \"flow_move_speed\": " + flowMoveSpeed + ",");
+            writer.println("  \"api_poll_interval_seconds\": " + apiPollIntervalSeconds);
             writer.println("}");
         } catch (IOException e) {
             System.err.println("Error saving settings: " + e.getMessage());

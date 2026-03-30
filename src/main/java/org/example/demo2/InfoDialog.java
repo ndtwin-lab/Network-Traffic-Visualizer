@@ -8,6 +8,7 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -66,7 +67,7 @@ public class InfoDialog {
             this.direction = direction;
             this.convertedSrcIp = convertedSrcIp;
             this.convertedDstIp = convertedDstIp;
-            this.sendingRate = flow.estimatedFlowSendingRateBpsInTheLastSec;
+            this.sendingRate = flow.getSendingRateBps();
             this.srcPort = flow.srcPort;
             this.dstPort = flow.dstPort;
             this.protocol = flow.protocolId;
@@ -901,15 +902,32 @@ public class InfoDialog {
         TableColumn<FlowTableItem, ?> sortCol = table.getSortOrder().get(0);
         TableColumn.SortType sortType = sortCol.getSortType();
 
-        // We care most about Sorting by "Sending Rate"
-        if ("Sending Rate".equals(sortCol.getText())) {
+        String colText = sortCol.getText();
+        if ("Sending Rate".equals(colText)) {
             if (sortType == TableColumn.SortType.ASCENDING) {
                 items.sort((a, b) -> Double.compare(a.sendingRate, b.sendingRate));
             } else if (sortType == TableColumn.SortType.DESCENDING) {
                 items.sort((a, b) -> Double.compare(b.sendingRate, a.sendingRate));
             }
+        } else if ("Src Port".equals(colText)) {
+            if (sortType == TableColumn.SortType.ASCENDING) {
+                items.sort((a, b) -> Integer.compare(a.srcPort, b.srcPort));
+            } else if (sortType == TableColumn.SortType.DESCENDING) {
+                items.sort((a, b) -> Integer.compare(b.srcPort, a.srcPort));
+            }
+        } else if ("Dst Port".equals(colText)) {
+            if (sortType == TableColumn.SortType.ASCENDING) {
+                items.sort((a, b) -> Integer.compare(a.dstPort, b.dstPort));
+            } else if (sortType == TableColumn.SortType.DESCENDING) {
+                items.sort((a, b) -> Integer.compare(b.dstPort, a.dstPort));
+            }
+        } else if ("Protocol".equals(colText)) {
+            if (sortType == TableColumn.SortType.ASCENDING) {
+                items.sort((a, b) -> Integer.compare(a.protocol, b.protocol));
+            } else if (sortType == TableColumn.SortType.DESCENDING) {
+                items.sort((a, b) -> Integer.compare(b.protocol, a.protocol));
+            }
         }
-        // For other columns，暫時沿用 TableView 預設排序（不特別處理）
     }
 
     // ===== API control helpers =====
@@ -1025,6 +1043,7 @@ public class InfoDialog {
                     return;
                 }
                 mainApp.setApiPollIntervalSeconds(seconds);
+                mainApp.persistUserSettings();
             } catch (NumberFormatException ex) {
                 javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                 alert.setTitle("Invalid Input");
@@ -1628,9 +1647,9 @@ public class InfoDialog {
         
         TableColumn<FlowTableItem, String> srcIpCol = new TableColumn<>("Src IP");
         TableColumn<FlowTableItem, String> dstIpCol = new TableColumn<>("Dst IP");
-        TableColumn<FlowTableItem, String> srcPortCol = new TableColumn<>("Src Port");
-        TableColumn<FlowTableItem, String> dstPortCol = new TableColumn<>("Dst Port");
-        TableColumn<FlowTableItem, String> protocolCol = new TableColumn<>("Protocol");
+        TableColumn<FlowTableItem, Number> srcPortCol = new TableColumn<>("Src Port");
+        TableColumn<FlowTableItem, Number> dstPortCol = new TableColumn<>("Dst Port");
+        TableColumn<FlowTableItem, Number> protocolCol = new TableColumn<>("Protocol");
         TableColumn<FlowTableItem, Number> sendingRateCol = new TableColumn<>("Sending Rate");
         TableColumn<FlowTableItem, String> startTimeCol = new TableColumn<>("First Sample Time");
         TableColumn<FlowTableItem, String> endTimeCol = new TableColumn<>("Latest Sample Time");
@@ -1658,9 +1677,42 @@ public class InfoDialog {
         // Set cell value factories
         srcIpCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().convertedSrcIp));
         dstIpCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().convertedDstIp));
-        srcPortCol.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().srcPort)));
-        dstPortCol.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().dstPort)));
-        protocolCol.setCellValueFactory(data -> new SimpleStringProperty(convertProtocolNumberToText(data.getValue().protocol)));
+        srcPortCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<Number>(data.getValue().srcPort));
+        dstPortCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<Number>(data.getValue().dstPort));
+        protocolCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<Number>(data.getValue().protocol));
+        srcPortCol.setCellFactory(col -> new TableCell<FlowTableItem, Number>() {
+            @Override
+            protected void updateItem(Number item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.valueOf(item.intValue()));
+                }
+            }
+        });
+        dstPortCol.setCellFactory(col -> new TableCell<FlowTableItem, Number>() {
+            @Override
+            protected void updateItem(Number item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.valueOf(item.intValue()));
+                }
+            }
+        });
+        protocolCol.setCellFactory(col -> new TableCell<FlowTableItem, Number>() {
+            @Override
+            protected void updateItem(Number item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(convertProtocolNumberToText(item.intValue()));
+                }
+            }
+        });
         startTimeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().startTime));
         endTimeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().endTime));
         // Numeric value for sorting; custom cell for formatted display

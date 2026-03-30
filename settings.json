@@ -1,3 +1,4 @@
 {
-  "flow_move_speed": 5.0
+  "flow_move_speed": 5.004310344827586,
+  "api_poll_interval_seconds": 4
 }

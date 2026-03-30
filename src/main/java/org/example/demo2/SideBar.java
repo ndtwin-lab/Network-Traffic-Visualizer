@@ -466,7 +466,9 @@ public class SideBar extends VBox {
             
             topologyCanvas.setFlowMoveSpeed(newVal.doubleValue());
             
-            saveSettings(newVal.doubleValue());
+            if (mainApp != null) {
+                mainApp.persistUserSettings();
+            }
         });
 
 
@@ -528,6 +530,7 @@ public class SideBar extends VBox {
                 if (mainApp != null) {
                     long seconds = (long) apiIntervalSlider.getValue();
                     mainApp.setApiPollIntervalSeconds(seconds);
+                    mainApp.persistUserSettings();
                 }
                 return speedSlider.getValue();
             }
@@ -537,17 +540,6 @@ public class SideBar extends VBox {
 
         dialog.showAndWait();
     }
-    
-    private void saveSettings(double flowMoveSpeed) {
-        try (java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.FileWriter("settings.json"))) {
-            writer.println("{");
-            writer.println("  \"flow_move_speed\": " + flowMoveSpeed);
-            writer.println("}");
-        } catch (java.io.IOException e) {
-            System.err.println("Error saving settings: " + e.getMessage());
-        }
-    }
-    
     
     private javafx.stage.Stage pathFlickerStage = null;
     
@@ -903,8 +895,8 @@ public class SideBar extends VBox {
         
         List<Flow> sortedFlows = new java.util.ArrayList<>(flows);
         sortedFlows.sort((f1, f2) -> Double.compare(
-            f2.estimatedFlowSendingRateBpsInTheLastSec, 
-            f1.estimatedFlowSendingRateBpsInTheLastSec
+            f2.getSendingRateBps(), 
+            f1.getSendingRateBps()
         ));
         
         
@@ -917,7 +909,7 @@ public class SideBar extends VBox {
             Flow flow = topKFlows.get(i);
             System.out.println("  [" + (i+1) + "] " + getDeviceName(flow.srcIp) + " → " + 
                              getDeviceName(flow.dstIp) + " | Rate: " + 
-                             flow.estimatedFlowSendingRateBpsInTheLastSec + " bps");
+                             flow.getSendingRateBps() + " bps");
         }
         
         
