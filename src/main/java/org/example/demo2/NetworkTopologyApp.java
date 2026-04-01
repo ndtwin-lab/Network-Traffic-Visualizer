@@ -67,7 +67,8 @@ public class NetworkTopologyApp extends Application {
     private BorderPane root;
     private SideBar sideBar;
     private StackPane centerPane; // Store centerPane reference for dark mode updates
-    
+    private Stage primaryStage;
+
     // Loading overlay components
     private VBox loadingOverlay;
     private ProgressIndicator loadingIndicator;
@@ -77,6 +78,7 @@ public class NetworkTopologyApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         List<Node> nodes = new ArrayList<>();
         List<Link> links = new ArrayList<>();
         List<Flow> flows = new ArrayList<>();
@@ -241,7 +243,6 @@ public class NetworkTopologyApp extends Application {
         Scene scene = new Scene(anchorPane, 1400, 900);
         primaryStage.setTitle("Network Traffic Visualizer");
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
 
         // Apply circular layout after scene creation (if no saved positions)
         // Removed: if (savedPositions.isEmpty()) {
@@ -287,6 +288,7 @@ public class NetworkTopologyApp extends Application {
         });
 
         primaryStage.show();
+        primaryStage.centerOnScreen();
 
         // ====== API Auto Update ======
         // Read API URL from environment variable, use default if not set
@@ -1692,6 +1694,11 @@ public class NetworkTopologyApp extends Application {
     // Getter for topologyCanvas
     public TopologyCanvas getTopologyCanvas() {
         return topologyCanvas;
+    }
+
+    /** Main application window; used to restore maximized/fullscreen after modal dialogs. */
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     /**

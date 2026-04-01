@@ -537,8 +537,7 @@ public class SideBar extends VBox {
             return null;
         });
 
-
-        dialog.showAndWait();
+        WindowStateRestore.runPreservingStageState(primaryStage, null, dialog::showAndWait);
     }
     
     private javafx.stage.Stage pathFlickerStage = null;
@@ -865,8 +864,8 @@ public class SideBar extends VBox {
             return null;
         });
         
-        
-        dialog.showAndWait().ifPresent(k -> {
+        WindowStateRestore.runPreservingStageState(primaryStage, null, () ->
+                dialog.showAndWait().ifPresent(k -> {
             if (k >= flows.size()) {
                 // Show all flows: disable API Top-K mode and canvas Top-K filter
                 if (mainApp != null) {
@@ -883,7 +882,7 @@ public class SideBar extends VBox {
                 applyTopKFlows(k);
                 System.out.println("[SIDEBAR] Applied Top-K flows filter: K=" + k);
             }
-        });
+        }));
     }
     
     private void applyTopKFlows(int k) {
@@ -978,11 +977,16 @@ public class SideBar extends VBox {
     }
     
     private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        WindowStateRestore.runPreservingStageState(primaryStage, null, () -> {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            if (primaryStage != null) {
+                alert.initOwner(primaryStage);
+            }
+            alert.showAndWait();
+        });
     }
     
     private void addLegend() {

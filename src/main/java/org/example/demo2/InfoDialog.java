@@ -961,97 +961,121 @@ public class InfoDialog {
         }
     }
 
+    /**
+     * Linux/GNOME often clears maximized/fullscreen on the main (and sometimes child) stage when a
+     * modal opens; snapshot before blocking dialogs and restore after.
+     */
+    private void preserveMainAndOwnerStageWhile(Runnable action) {
+        Stage main = mainApp != null ? mainApp.getPrimaryStage() : null;
+        Window ownerW = getApiDialogOwner();
+        Stage ownerStage = ownerW instanceof Stage ? (Stage) ownerW : null;
+        Stage primary;
+        Stage secondary;
+        if (main != null) {
+            primary = main;
+            secondary = (ownerStage != null && ownerStage != main) ? ownerStage : null;
+        } else {
+            primary = ownerStage;
+            secondary = null;
+        }
+        WindowStateRestore.runPreservingStageState(primary, secondary, action);
+    }
+
     // Open a small dialog to configure Top-K mode via NDT API
     private void showApiTopKDialog() {
-        if (mainApp == null) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("Not Available");
-            alert.setHeaderText(null);
-            alert.setContentText("Main application is not attached; API controls are disabled.");
-            initOwnerIfPossible(alert);
-            alert.showAndWait();
-            return;
-        }
+        preserveMainAndOwnerStageWhile(() -> {
+            if (mainApp == null) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitle("Not Available");
+                alert.setHeaderText(null);
+                alert.setContentText("Main application is not attached; API controls are disabled.");
+                initOwnerIfPossible(alert);
+                alert.showAndWait();
+                return;
+            }
 
-        // Initialize K with current total flow count if available
-        int defaultK = 10;
-        if (mainApp.getLastFullFlowCount() > 0) {
-            defaultK = mainApp.getLastFullFlowCount();
-        } else if (allFlows != null && !allFlows.isEmpty()) {
-            defaultK = allFlows.size();
-        }
+            // Initialize K with current total flow count if available
+            int defaultK = 10;
+            if (mainApp.getLastFullFlowCount() > 0) {
+                defaultK = mainApp.getLastFullFlowCount();
+            } else if (allFlows != null && !allFlows.isEmpty()) {
+                defaultK = allFlows.size();
+            }
 
-        javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(defaultK));
-        inputDialog.setTitle("Top-K Flows");
-        inputDialog.setHeaderText("Display only Top-k Flows");
-        inputDialog.setContentText("Enter K (Top-K flows):");
-        initOwnerIfPossible(inputDialog);
+            javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(defaultK));
+            inputDialog.setTitle("Top-K Flows");
+            inputDialog.setHeaderText("Display only Top-k Flows");
+            inputDialog.setContentText("Enter K (Top-K flows):");
+            initOwnerIfPossible(inputDialog);
 
-        inputDialog.showAndWait().ifPresent(text -> {
-            try {
-                int k = Integer.parseInt(text.trim());
-                if (k <= 0) {
+            inputDialog.showAndWait().ifPresent(text -> {
+                try {
+                    int k = Integer.parseInt(text.trim());
+                    if (k <= 0) {
+                        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                        alert.setTitle("Invalid Input");
+                        alert.setHeaderText(null);
+                        alert.setContentText("K must be a positive integer.");
+                        initOwnerIfPossible(alert);
+                        alert.showAndWait();
+                        return;
+                    }
+                    mainApp.setApiTopKMode(true, k);
+                } catch (NumberFormatException ex) {
                     javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                     alert.setTitle("Invalid Input");
                     alert.setHeaderText(null);
-                    alert.setContentText("K must be a positive integer.");
+                    alert.setContentText("Please enter a valid integer for K.");
                     initOwnerIfPossible(alert);
                     alert.showAndWait();
-                    return;
                 }
-                mainApp.setApiTopKMode(true, k);
-            } catch (NumberFormatException ex) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Invalid Input");
-                alert.setHeaderText(null);
-                alert.setContentText("Please enter a valid integer for K.");
-                initOwnerIfPossible(alert);
-                alert.showAndWait();
-            }
+            });
         });
     }
 
     // Open a small dialog to configure API polling interval
     private void showApiIntervalDialog() {
-        if (mainApp == null) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("Not Available");
-            alert.setHeaderText(null);
-            alert.setContentText("Main application is not attached; API controls are disabled.");
-            initOwnerIfPossible(alert);
-            alert.showAndWait();
-            return;
-        }
+        preserveMainAndOwnerStageWhile(() -> {
+            if (mainApp == null) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitle("Not Available");
+                alert.setHeaderText(null);
+                alert.setContentText("Main application is not attached; API controls are disabled.");
+                initOwnerIfPossible(alert);
+                alert.showAndWait();
+                return;
+            }
 
-        long current = mainApp.getApiPollIntervalSeconds();
-        javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(current));
-        inputDialog.setTitle("Update Interval");
-        inputDialog.setHeaderText("Configure update interval");
-        inputDialog.setContentText("Interval (seconds, >= 1):");
-        initOwnerIfPossible(inputDialog);
+            long current = mainApp.getApiPollIntervalSeconds();
+            javafx.scene.control.TextInputDialog inputDialog = new javafx.scene.control.TextInputDialog(String.valueOf(current));
+            inputDialog.setTitle("Update Interval");
+            inputDialog.setHeaderText("Configure update interval");
+            inputDialog.setContentText("Interval (seconds, >= 1):");
+            initOwnerIfPossible(inputDialog);
 
-        inputDialog.showAndWait().ifPresent(text -> {
-            try {
-                long seconds = Long.parseLong(text.trim());
-                if (seconds <= 0) {
+            inputDialog.showAndWait().ifPresent(text -> {
+                try {
+                    long seconds = Long.parseLong(text.trim());
+                    if (seconds <= 0) {
+                        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                        alert.setTitle("Invalid Input");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Interval must be a positive number.");
+                        initOwnerIfPossible(alert);
+                        alert.showAndWait();
+                        return;
+                    }
+                    mainApp.setApiPollIntervalSeconds(seconds);
+                    mainApp.persistUserSettings();
+                } catch (NumberFormatException ex) {
                     javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                     alert.setTitle("Invalid Input");
                     alert.setHeaderText(null);
-                    alert.setContentText("Interval must be a positive number.");
+                    alert.setContentText("Please enter a valid integer for seconds.");
                     initOwnerIfPossible(alert);
                     alert.showAndWait();
-                    return;
                 }
-                mainApp.setApiPollIntervalSeconds(seconds);
-                mainApp.persistUserSettings();
-            } catch (NumberFormatException ex) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Invalid Input");
-                alert.setHeaderText(null);
-                alert.setContentText("Please enter a valid integer for seconds.");
-                initOwnerIfPossible(alert);
-                alert.showAndWait();
-            }
+            });
         });
     }
 
